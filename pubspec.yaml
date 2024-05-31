@@ -32,6 +32,8 @@ dependencies:
   flutter_screenutil: 5.0.0
   #Sp持久化
   sp_util: ^2.0.3
+  #GetX框架
+  get: 4.2.4
   #动态权限申请
   permission_handler: ^8.0.1
   #dialog
@@ -59,6 +61,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icon/
+  fonts:
+    - family: IconFont
+      fonts:
+        - asset: fonts/iconfont.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
