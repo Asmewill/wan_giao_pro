@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:wan_giao_pro/compents/icon_font.dart';
 import 'package:wan_giao_pro/page/home_page.dart';
 import 'package:wan_giao_pro/page/person_page.dart';
@@ -22,6 +23,7 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   int _pageIndex = 0;
   PageController? controller;
+  DateTime? _lastDateTime;
   @override
   void initState() {
     // TODO: implement initState
@@ -32,16 +34,26 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: createBottomUI(),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: [
-          HomePage(),
-          WeChatPage(),
-          SystemPage(),
-          ProjectPage(),
-          PersonPage()
-        ],
+      body: WillPopScope(
+        onWillPop: (){
+          if(_lastDateTime==null||DateTime.now().difference(_lastDateTime!)>Duration(seconds: 1)){
+            _lastDateTime = DateTime.now();
+            showToast("再次点击退出程序",position: ToastPosition.center);
+            return Future.value(false);
+          }
+          return Future.value(true);
+        },
+        child: PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: controller,
+          children: [
+            HomePage(),
+            WeChatPage(),
+            SystemPage(),
+            ProjectPage(),
+            PersonPage()
+          ],
+        ),
       ),
     );
   }
