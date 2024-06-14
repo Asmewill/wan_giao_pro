@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oktoast/oktoast.dart';
+import 'package:get/get.dart';
+import 'package:wan_giao_pro/controller/login_controller.dart';
 import 'package:wan_giao_pro/theme/app_color.dart';
 import 'package:wan_giao_pro/theme/app_style.dart';
 
@@ -13,10 +13,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final userNameController = TextEditingController();
   final userPwdController = TextEditingController();
-
+  final loginController=Get.find<LoginController>();
+  final FocusNode pwdFocusNode = FocusNode();
+  final FocusNode userNameFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -67,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               margin: EdgeInsets.only(left: 20.h, top: 50.h, right: 20.h),
               height: 42.h,
               child: TextField(
+                focusNode: userNameFocusNode,
                 controller: userNameController,
                 style: TextStyle(fontSize: 15.sp, color: Colors.black),
                 onChanged: (String v) {
@@ -103,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 42.h,
               child: TextField(
                 controller: userPwdController,
+                focusNode: pwdFocusNode,
                 style: TextStyle(fontSize: 15.sp, color: Colors.black),
                 onChanged: (String v) {
                   setState(() {});
@@ -157,6 +160,10 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(20.h)),
                 ),
                 onTap: () {
+                  //解决登录之后，键盘异常弹起问题
+                  pwdFocusNode.unfocus();
+                  userNameFocusNode.unfocus();
+                  loginController.doLogin(userNameController.text, userPwdController.text);
 
                 },
               ),
@@ -177,14 +184,21 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: (){
                     Get.toNamed("/register_page");
                   },
-                )
-                ,
+                ),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    userNameFocusNode.dispose();
+    pwdFocusNode.dispose();
   }
 
 }

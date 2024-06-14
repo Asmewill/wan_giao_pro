@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:wan_giao_pro/app/app_state.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
 import 'package:wan_giao_pro/compents/icon_text_widget.dart';
+import 'package:wan_giao_pro/controller/user_info_controller.dart';
+import 'package:wan_giao_pro/defalut/global.dart';
 
 class PersonPage extends StatefulWidget {
   @override
@@ -26,7 +29,10 @@ class _PersonPageState extends State<PersonPage> {
               Line(),
               _menuIconWidget(),
               Line(),
-              Expanded(child: Container(),flex: 1,)
+              Expanded(
+                child: Container(),
+                flex: 1,
+              )
             ],
           ),
         ));
@@ -82,11 +88,11 @@ class _PersonPageState extends State<PersonPage> {
                   color: Colors.white,
                   child: Ink(
                       child: InkWell(
-                child: Icon(Icons.settings),
-                onTap: () {
-                   Get.toNamed("/setting_page");
-                },
-              ))),
+                    child: Icon(Icons.settings),
+                    onTap: () {
+                      Get.toNamed("/setting_page");
+                    },
+                  ))),
             )
           ],
         ),
@@ -98,132 +104,157 @@ class _PersonPageState extends State<PersonPage> {
    * 个人信息Widget
    */
   Widget _personInfoWidget() {
-    return Container(
-      padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 5.h, top: 10.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "sj01",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 1.h),
+    return Obx(() {
+      return Container(
+        padding:
+            EdgeInsets.only(left: 20.w, right: 20.w, bottom: 5.h, top: 10.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            appState.isLogin.value
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        Global.userProfile.username ?? "",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      GetX<UserInfoController>(
+                          init: Get.put<UserInfoController>(UserInfoController()),
+                          builder: (controller) {
+                            return Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 1.h),
+                                  child: Text(
+                                    "lv"+controller.coin.level.toString(),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueAccent[200]
+                                          ?.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 1.h),
+                                  child: Text(
+                                    "积分 46",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                              ],
+                            );
+                          })
+                    ],
+                  )
+                : InkWell(
                     child: Text(
-                      "lv1",
-                      style: TextStyle(color: Colors.white),
+                      "立即登录",
+                      style:
+                          TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent[200]?.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(5)),
+                    onTap: () {
+                      Get.toNamed("/login_page");
+                    },
                   ),
-                  SizedBox(
-                    width: 10.w,
-                  ),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 1.h),
-                    child: Text(
-                      "积分 46",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                ],
-              )
-            ],
-          ),
-          InkWell(
-            child:   Text(
-              "立即登录",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
-            ),
-            onTap: (){
-              Get.toNamed("/login_page");
-            },
-          )
-        ,
-          Container(
-            width: 56.w,
-            height: 56.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle, // 设置形状为圆形
-              image: DecorationImage(
-                image: AssetImage('assets/icon/ic_default_avatar.jpg'),
-                fit: BoxFit.cover,
+            Container(
+              width: 56.w,
+              height: 56.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // 设置形状为圆形
+                image: DecorationImage(
+                  image: AssetImage('assets/icon/ic_default_avatar.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    });
   }
 
- Widget _menuIconWidget() {
-    return   Container(
+  Widget _menuIconWidget() {
+    return Container(
       height: 80.h,
       width: double.infinity,
-      child:Flex(
+      child: Flex(
         direction: Axis.horizontal,
         children: [
           Expanded(
               flex: 1,
               child: Container(
                 height: double.infinity,
-                child: IconTextWidget(Icons.collections_outlined,"收藏",13,Colors.black,verticalSpacing:6.h,iconColor: Colors.black,onTap:(){
-
-                },),
-
+                child: IconTextWidget(
+                  Icons.collections_outlined,
+                  "收藏",
+                  13,
+                  Colors.black,
+                  verticalSpacing: 6.h,
+                  iconColor: Colors.black,
+                  onTap: () {},
+                ),
               )),
           Expanded(
               flex: 1,
               child: Container(
                 height: double.infinity,
-                child: IconTextWidget(Icons.share,"分享",13 ,Colors.black,verticalSpacing:6.h,iconColor: Colors.black,onTap:(){
-
-                },),
-
+                child: IconTextWidget(
+                  Icons.share,
+                  "分享",
+                  13,
+                  Colors.black,
+                  verticalSpacing: 6.h,
+                  iconColor: Colors.black,
+                  onTap: () {},
+                ),
               )),
           Expanded(
               flex: 1,
               child: Container(
                 height: double.infinity,
-                child: IconTextWidget(Icons.stars_outlined,"积分",13 ,Colors.black,verticalSpacing:6.h,iconColor: Colors.black,onTap:(){
-
-                },),
-
+                child: IconTextWidget(
+                  Icons.stars_outlined,
+                  "积分",
+                  13,
+                  Colors.black,
+                  verticalSpacing: 6.h,
+                  iconColor: Colors.black,
+                  onTap: () {},
+                ),
               )),
           Expanded(
               flex: 1,
               child: Container(
                 height: double.infinity,
-                child: IconTextWidget(Icons.leaderboard_outlined,"排行榜",13 ,Colors.black,verticalSpacing:6.h,iconColor: Colors.black,onTap:(){
-
-                },),
-
+                child: IconTextWidget(
+                  Icons.leaderboard_outlined,
+                  "排行榜",
+                  13,
+                  Colors.black,
+                  verticalSpacing: 6.h,
+                  iconColor: Colors.black,
+                  onTap: () {},
+                ),
               ))
-
-
         ],
-      ) ,
+      ),
     );
-
   }
 }
-

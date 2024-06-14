@@ -2,7 +2,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:sp_util/sp_util.dart';
+import 'package:wan_giao_pro/app/app_state.dart';
+import 'package:wan_giao_pro/compents/constant.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
+import 'package:wan_giao_pro/http/http_manager.dart';
+import 'package:wan_giao_pro/http/request_api.dart';
 import 'package:wan_giao_pro/page/person_page.dart';
 
 class SettingPage extends StatelessWidget {
@@ -186,15 +191,25 @@ class SettingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
+                appState.isLogin.value?Container(
                   margin: EdgeInsets.only(top: 20),
                   width: double.infinity,
                   height: 40.h,
                   color: Colors.white,
-                  child:TextButton(onPressed: (){
-                    showToast("退出登录");
-                  }, child: Text("退出登录",style: TextStyle(color:Colors.red),)),
-                )
+                  child: TextButton(
+                      onPressed: () {
+                        _showIsLogoutDialog(context).then((value) {
+                          if (value) {
+                            logout();
+                            Get.back();
+                          }
+                        });
+                      },
+                      child: Text(
+                        "退出登录",
+                        style: TextStyle(color: Colors.red),
+                      )),
+                ):Container()
               ],
             ),
           )
@@ -202,4 +217,37 @@ class SettingPage extends StatelessWidget {
       ),
     );
   }
+
+  _showIsLogoutDialog(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("确认退出"),
+            content: Text("退出当前账号,将不能同步收藏，评论，查看积分等"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Get.back(result: false);
+                  },
+                  child: Text("取消")),
+              TextButton(
+                  onPressed: () {
+                    Get.back(result: true);
+                  },
+                  child: Text("确定"))
+            ],
+          );
+        });
+  }
+}
+
+logout(){
+  HttpManager.instance.get(RequestApi.LOGO_OUT_API);
+  //删除cookie
+  HttpManager.clearCookie();
+  SpUtil.remove(Constant.KEY_USER);
+  //设置登录状态
+  appState.isLogin.value=false;
+
 }

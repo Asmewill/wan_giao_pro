@@ -41,7 +41,12 @@ dependencies:
   #cookie 持久化
   cookie_jar: 3.0.1
   dio_cookie_manager: ^2.0.0
+  #获取文件路径，适配Android&IOS
   path_provider: ^2.0.1
+  #图片缓存框架
+  cached_network_image: ^3.1.0
+  #骨架屏
+  pk_skeleton_null_safe: 0.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

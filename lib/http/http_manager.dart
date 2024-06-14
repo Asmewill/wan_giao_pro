@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,7 @@ class HttpManager{
  static PersistCookieJar? _cookieJar;
  static HttpManager? _instance;
  static HttpManager get instance =>_getInstance();
-
+  bool isOpenProxy=true;//是否开启代理
   HttpManager._(){
     BaseOptions options=BaseOptions(
       baseUrl:RequestApi.HOST,
@@ -26,6 +27,15 @@ class HttpManager{
     );
     _dio = Dio(options);
     _dio.interceptors.add(CookieManager(_cookieJar!));
+    if(isOpenProxy){
+      //dio.options.contentType = "text";
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+        client.findProxy = (uri) {
+          return "PROXY 192.168.2.135:8888";//192.168.2.139为当前电脑的ip
+        };
+        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      };
+    }
     if(kDebugMode){
       _dio!.interceptors.add(LogInterceptor(request: true,responseBody: true,error: true));
     }
@@ -45,37 +55,97 @@ class HttpManager{
     await _cookieJar?.deleteAll();
   }
 
-  Future<dynamic> get(String url,{Map<String,dynamic>? params,String newUrl=""}) async {
-    return request(url,method: Method.GET,newUrl: newUrl);
-  }
-
-  Future<dynamic> post(String url,{Map<String,dynamic>? params,String newUrl=""}) async{
-    return request(url,method: Method.POST,newUrl: newUrl);
-  }
-
-
- Future<dynamic> request(String url,{Map<String,dynamic>? params,Options? options,String method =Method.GET, String newUrl="" }) async{
+  /***
+   * queryParams可以表示get请求的参数
+   */
+  Future<dynamic> get(String url, { Map<String, dynamic>? queryParams, String newUrl = ""}) async {
     Response response;
-    Options tempOptions=options??Options();
-    tempOptions.extra={"newUrl:":newUrl};
-    tempOptions.method=method;
+    Options options=Options();
+    options.extra={"newUrl:":newUrl};
+    options.method=Method.GET;
     try{
-      response=await _dio!.post(url,data: params,options: options);
+      response = await _dio!.get(url,queryParameters: queryParams,options: options);
       if(response.statusCode==200){
-        if(response.data['code']!=null&&response.data['code']!=1){
-          throw ResultException(response.data['code'], response.data['msg']);
+        if(response.data['errorCode']!=null&&response.data['errorCode']==0||
+            response.data['errorCode']!=null&&response.data['errorCode']==1){
+          return response.data;
+        }else{
+          throw ResultException(response.data['errorCode'], response.data['errorMsg']);
         }
-        if(response.data['errorCode']!=null&&response.data['errorCode']!=0){
-          throw ResultException(response.data['code'], response.data['msg']);
-        }
-        return response.data;
       }else{
         throw ResultException(9007,"服务器失联了，呜呜呜呜");
       }
     } on DioError catch(e){
+      throw HttpDioError.handleError(e);
+    }
+  }
+
+
+  Future<dynamic> post(String url,{Map<String,dynamic>? params,String newUrl=""}) async{
+    Response response;
+    Options options=Options();
+    options.extra={"newUrl:":newUrl};
+    options.method=Method.POST;
+    try{
+      response = await _dio!.post(url,data: params,options: options);
+      if(response.statusCode==200){
+        if(response.data['errorCode']!=null&&response.data['errorCode']==0||
+            response.data['errorCode']!=null&&response.data['errorCode']==1){
+          return response.data;
+        }else{
+          throw ResultException(response.data['errorCode'], response.data['errorMsg']);
+        }
+      }else{
+        throw ResultException(9007,"服务器失联了，呜呜呜呜");
+      }
+    } on DioError catch(e){
+      throw HttpDioError.handleError(e);
+    }
+  }
+
+
+
+ Future postFormData(String url,Map<String,dynamic> params) async{
+    try{
+      Response response;
+      response=await _dio.post(url,data:FormData.fromMap(params));
+      if(response.statusCode==200){
+        if(response.data['errorCode']!=null&&response.data['errorCode']==0||
+            response.data['errorCode']!=null&&response.data['errorCode']==1){
+          return response.data;
+        }else{
+          throw ResultException(response.data['errorCode'], response.data['errorMsg']);
+        }
+      }else{
+        throw ResultException(9007,"服务器失联了，呜呜呜呜");
+      }
+    }on DioError catch(e){
       HttpDioError.handleError(e);
     }
  }
+
+//  Future<dynamic>  request(String url, {Map<String, dynamic>? params, Map<String, dynamic>? queryParams,Options? options, String method = Method.GET, String newUrl = ""}) async {
+//    Response response;
+//    Options tempOptions=options??Options();
+//    tempOptions.extra={"newUrl:":newUrl};
+//    tempOptions.method=method;
+//    try{
+//      response = await _dio!.request(url,data: params, queryParameters: queryParams,options: options);
+//      if(response.statusCode==200){
+//        if(response.data['errorCode']!=null&&response.data['errorCode']==0||
+//            response.data['errorCode']!=null&&response.data['errorCode']==1){
+//          return response.data;
+//        }else{
+//          throw ResultException(response.data['code'], response.data['msg']);
+//        }
+//      }else{
+//        throw ResultException(9007,"服务器失联了，呜呜呜呜");
+//      }
+//    } on DioError catch(e){
+//      HttpDioError.handleError(e);
+//    }
+// }
+
 }
 
 
@@ -113,6 +183,10 @@ class HttpDioError{
       case DioErrorType.cancel:
         code=9005;
         message="网络异常，请稍后重试!";
+        break;
+      case DioErrorType.other:
+        code=9007;
+        message="网络异常，请稍后重试!!!";
         break;
     }
     return ResultException(code,message);

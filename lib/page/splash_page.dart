@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       }
       refreshTime++;
       setState(() {
-        print("refresh"+refreshTime!.toString());//动画播放期间，页面刷新多次
+        //print("SplashPage:动画播放次数："+refreshTime!.toString());//动画播放期间，页面刷新多次
       });
     });
     _animationController!.forward();//开始播放动画
