@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final loginController=Get.find<LoginController>();
   final FocusNode pwdFocusNode = FocusNode();
   final FocusNode userNameFocusNode = FocusNode();
+  bool obscure=true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextField(
                 controller: userPwdController,
                 focusNode: pwdFocusNode,
+                obscureText: obscure,
                 style: TextStyle(fontSize: 15.sp, color: Colors.black),
                 onChanged: (String v) {
                   setState(() {});
@@ -113,21 +115,45 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   prefixIcon: Icon(
-                    Icons.person,
+                    Icons.lock,
                     color: Colors.grey,
                   ),
-                  suffixIcon: userPwdController.text.isEmpty
-                      ? null
-                      : IconButton(
-                          onPressed: () {
+                  suffixIcon:Container(
+                    width: 100.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        userPwdController.text.isEmpty?Container():
+                        InkWell(
+                          child:Icon(
+                            Icons.cancel,
+                            color: Colors.grey,
+                          ),
+                          onTap: (){
                             setState(() {
                               userPwdController.clear();
                             });
+
                           },
-                          icon: Icon(
-                            Icons.cancel,
+                        ),
+                        SizedBox(width: 10,),
+                        InkWell(
+                          child:Icon(
+                            obscure?Icons.visibility:Icons.visibility_off,
                             color: Colors.grey,
-                          )),
+                          ),
+                          onTap: (){
+                            setState(() {
+                              this.obscure=!this.obscure;
+                            });
+
+                          },
+                        ),
+                        SizedBox(width: 10,),
+
+                      ],
+                    ),
+                  ),
                   hintText: "请输入密码",
                   focusedBorder: kLoginInputBorder,
                   errorBorder: kLoginInputBorder,

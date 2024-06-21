@@ -1,5 +1,6 @@
 
 import 'package:oktoast/oktoast.dart';
+import 'package:wan_giao_pro/base/base_getx_controller_with_refresh.dart';
 import 'package:wan_giao_pro/bean/article_data.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/bean/banner_data.dart';
@@ -9,7 +10,7 @@ import 'package:wan_giao_pro/http/http_manager.dart';
 import 'package:wan_giao_pro/http/request_api.dart';
 import 'package:get/get.dart';
 
-import 'base/base_getx_controller_with_refresh.dart';
+
 
 class RecommondController extends BaseGetXControllerWithRefresh {
   var bannerItems = <BannerItem>[].obs;

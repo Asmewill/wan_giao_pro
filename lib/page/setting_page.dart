@@ -4,8 +4,9 @@ import 'package:get/route_manager.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:wan_giao_pro/app/app_state.dart';
-import 'package:wan_giao_pro/compents/constant.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
+import 'package:wan_giao_pro/event/message_event.dart';
 import 'package:wan_giao_pro/http/http_manager.dart';
 import 'package:wan_giao_pro/http/request_api.dart';
 import 'package:wan_giao_pro/page/person_page.dart';
@@ -198,7 +199,7 @@ class SettingPage extends StatelessWidget {
                   color: Colors.white,
                   child: TextButton(
                       onPressed: () {
-                        _showIsLogoutDialog(context).then((value) {
+                        _showIsLogoutDialog(context).then((bool value) {
                           if (value) {
                             logout();
                             Get.back();
@@ -218,7 +219,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  _showIsLogoutDialog(BuildContext context) async {
+  Future<bool> _showIsLogoutDialog(BuildContext context) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -233,7 +234,7 @@ class SettingPage extends StatelessWidget {
                   child: Text("取消")),
               TextButton(
                   onPressed: () {
-                    Get.back(result: true);
+                    Get.back(result: true); //使用then接收返回值
                   },
                   child: Text("确定"))
             ],
@@ -249,5 +250,6 @@ logout(){
   SpUtil.remove(Constant.KEY_USER);
   //设置登录状态
   appState.isLogin.value=false;
+  eventBus.fire(MessageEvent(Constant.REFRESH_PAGE,null));
 
 }

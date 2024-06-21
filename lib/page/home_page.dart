@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/search_view.dart';
 import 'package:wan_giao_pro/page/question_page.dart';
 import 'package:wan_giao_pro/page/recommend_page.dart';
@@ -34,7 +35,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           backgroundColor: Colors.white,
           appBar: _topBarView(),
           body: TabBarView(
-            children: [SquarePage(), RecommendPage(), QuestionPage()],
+            //https://github.com/peng8350/flutter_pulltorefresh/issues/483
+            //2.0.0null safety版本，报错「Don't use one refreshController to multiple SmartRefresher,It will cause some unexpected bugs mostly in TabBarView」
+            children: [SquarePage(RefreshController()), RecommendPage(RefreshController()), QuestionPage()
+            ],
           ),
         ));
   }

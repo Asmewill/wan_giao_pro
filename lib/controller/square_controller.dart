@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:wan_giao_pro/base/base_getx_controller_with_refresh.dart';
 import 'package:wan_giao_pro/bean/article_data.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
-import 'package:wan_giao_pro/controller/base/base_getx_controller_with_refresh.dart';
 import 'package:wan_giao_pro/http/http_manager.dart';
 
 class SquareController extends BaseGetXControllerWithRefresh {
@@ -14,6 +14,7 @@ class SquareController extends BaseGetXControllerWithRefresh {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    initData(true);
   }
 
   void getSquareArticle(bool isShowLoading) {
@@ -43,6 +44,8 @@ class SquareController extends BaseGetXControllerWithRefresh {
             pageIndex++;
           }
     }, failture: (dynamic error) {
+      refreshController!.refreshFailed();
+      refreshController!.loadFailed();
       showToast(error);
     });
   }

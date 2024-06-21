@@ -1,36 +1,62 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
+import 'package:wan_giao_pro/controller/collection_controller.dart';
 import 'package:wan_giao_pro/controller/square_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wan_giao_pro/event/message_event.dart';
 
 class SquarePage extends StatefulWidget {
+  RefreshController refreshController;
+
+  SquarePage(this.refreshController);
+
   @override
   State<SquarePage> createState() => _SquarePageState();
+
 }
 
-class _SquarePageState extends State<SquarePage> with AutomaticKeepAliveClientMixin {
+class _SquarePageState extends State<SquarePage>
+    with AutomaticKeepAliveClientMixin {
+  late  StreamSubscription<MessageEvent> actionEventBus;
+  SquareController? _squareController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _squareController=Get.put<SquareController>(SquareController());
+    //2.0.0null safety版本，报错「Don't use one refreshController to multiple SmartRefresher,It will cause some unexpected bugs mostly in TabBarView」
+    _squareController!.setRefreshController(widget.refreshController);
+    actionEventBus = eventBus.on<MessageEvent>().listen((MessageEvent event) {
+      if(event.type==Constant.REFRESH_PAGE){
+        _squareController!.refresh();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    actionEventBus.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: GetX<SquareController>(
-            init: Get.find<SquareController>(),
-            initState: (state) {
-              Get.find<SquareController>().initData(true);
-            },
             builder: (SquareController squareController) {
               return SmartRefresher(
-                  controller: squareController!.refreshController!,
+                  controller:squareController.refreshController!,
                   header: MaterialClassicHeader(),
+                  footer: ClassicFooter(),
                   enablePullUp: true,
                   enablePullDown: true,
                   onRefresh: () async {
@@ -68,7 +94,28 @@ class _SquarePageState extends State<SquarePage> with AutomaticKeepAliveClientMi
                 child: Row(
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          CollectionController collectionController =
+                          Get.find<CollectionController>();
+                          if (articleItem.collect ?? false) {
+                            collectionController
+                                .unCollectionArticle(articleItem.id.toString(), () {
+                              articleItem.setCollect = false;
+                              setState(() {});
+                            }, (value) {
+                              showToast(value);
+                            });
+                          } else {
+                            collectionController
+                                .collectArticle(articleItem.id.toString(), () {
+                              articleItem.setCollect = true;
+                              showToast("收藏成功");
+                              setState(() {});
+                            }, (value) {
+                              showToast(value);
+                            });
+                          }
+                        },
                         icon: articleItem.collect ?? false
                             ? Icon(
                                 Icons.favorite,
@@ -112,18 +159,20 @@ class _SquarePageState extends State<SquarePage> with AutomaticKeepAliveClientMi
                             ),
                             Expanded(
                                 child: Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.only(right: 10.w),
-                                  child: Text(
-                                    articleItem.niceDate??articleItem.niceShareDate??"",
-                                    style:
-                                    TextStyle(color: Colors.grey, fontSize: 12.sp),
-                                  ),
-                                ))
+                              alignment: Alignment.centerRight,
+                              margin: EdgeInsets.only(right: 10.w),
+                              child: Text(
+                                articleItem.niceDate ??
+                                    articleItem.niceShareDate ??
+                                    "",
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12.sp),
+                              ),
+                            ))
                           ],
                         ),
                         Expanded(
-                            flex: 3,
+                            flex: 30,
                             child: Container(
                               padding: EdgeInsets.only(top: 5, right: 5),
                               alignment: Alignment.centerLeft,
@@ -132,13 +181,14 @@ class _SquarePageState extends State<SquarePage> with AutomaticKeepAliveClientMi
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 17.sp,
-                                    fontWeight: FontWeight.w900),
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.3),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
                             )),
                         Expanded(
-                          flex: 2,
+                          flex: 15,
                           child: Container(
                             padding: EdgeInsets.only(top: 5, right: 5),
                             child: Text(

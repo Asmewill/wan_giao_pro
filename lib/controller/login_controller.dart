@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_giao_pro/app/app_state.dart';
+import 'package:wan_giao_pro/base/base_getx_controller.dart';
 import 'package:wan_giao_pro/bean/user_data.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/compents/dialog_util.dart';
-import 'package:wan_giao_pro/controller/base/base_getx_controller.dart';
 import 'package:wan_giao_pro/defalut/global.dart';
+import 'package:wan_giao_pro/event/message_event.dart';
 import 'package:wan_giao_pro/http/http_manager.dart';
 import 'package:wan_giao_pro/http/request_api.dart';
 import 'package:wan_giao_pro/theme/app_text.dart';
@@ -26,7 +28,8 @@ class LoginController extends BaseGetXController {
           Global.saveUserProfile(user!);
           appState.isLogin.value=true;
           LoadingDialog.dismiss();
-          Get.back();
+          eventBus.fire(MessageEvent(Constant.REFRESH_PAGE,null));
+          Get.offNamed("/index_page");
         },
         failture: (error) {
           LoadingDialog.dismiss();

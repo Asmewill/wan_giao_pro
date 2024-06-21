@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:wan_giao_pro/app/app_state.dart';
 import 'package:wan_giao_pro/bean/user_data.dart';
-import 'package:wan_giao_pro/compents/constant.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/http/http_manager.dart';
 
 class Global{

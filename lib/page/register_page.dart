@@ -21,6 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final FocusNode pwd1FocusNode = FocusNode();
   final FocusNode pwd2FocusNode = FocusNode();
   final registerController=Get.find<RegisterController>();
+  bool obscure=true;
+  bool obscure1=true;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextField(
                   focusNode: this.pwd1FocusNode,
                   controller: passwordController,
+                  obscureText: this.obscure,
                   style: TextStyle(fontSize: 15.sp, color: Colors.black),
                   onChanged: (String v) {
                     setState(() {});
@@ -100,21 +103,45 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     prefixIcon: Icon(
-                      Icons.person,
+                      Icons.lock,
                       color: Colors.grey,
                     ),
-                    suffixIcon: passwordController.text.isEmpty
-                        ? null
-                        : IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passwordController.clear();
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cancel,
-                          color: Colors.grey,
-                        )),
+                    suffixIcon: Container(
+                      width: 100.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          passwordController.text.isEmpty?Container():
+                          InkWell(
+                            child:Icon(
+                              Icons.cancel,
+                              color: Colors.grey,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                passwordController.clear();
+                              });
+
+                            },
+                          ),
+                          SizedBox(width: 10,),
+                          InkWell(
+                            child:Icon(
+                              obscure?Icons.visibility:Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                this.obscure=!this.obscure;
+                              });
+
+                            },
+                          ),
+                          SizedBox(width: 10,),
+
+                        ],
+                      ),
+                    ),
                     hintText: "请输入密码",
                     focusedBorder: kLoginInputBorder,
                     errorBorder: kLoginInputBorder,
@@ -127,6 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 margin: EdgeInsets.only(left: 20.h, top: 20.h, right: 20.h),
                 height: 42.h,
                 child: TextField(
+                  obscureText: this.obscure1,
                   focusNode: this.pwd2FocusNode,
                   controller: passwordConfirmController,
                   style: TextStyle(fontSize: 15.sp, color: Colors.black),
@@ -136,21 +164,45 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.zero,
                     prefixIcon: Icon(
-                      Icons.person,
+                      Icons.lock,
                       color: Colors.grey,
                     ),
-                    suffixIcon: passwordConfirmController.text.isEmpty
-                        ? null
-                        : IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passwordConfirmController.clear();
-                          });
-                        },
-                        icon: Icon(
-                          Icons.cancel,
-                          color: Colors.grey,
-                        )),
+                    suffixIcon:Container(
+                      width: 100.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          this.passwordConfirmController.text.isEmpty?Container():
+                          InkWell(
+                            child:Icon(
+                              Icons.cancel,
+                              color: Colors.grey,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                this.passwordConfirmController.clear();
+                              });
+
+                            },
+                          ),
+                          SizedBox(width: 10,),
+                          InkWell(
+                            child:Icon(
+                              obscure?Icons.visibility:Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                this.obscure1=!this.obscure1;
+                              });
+
+                            },
+                          ),
+                          SizedBox(width: 10,),
+
+                        ],
+                      ),
+                    ),
                     hintText: "请再次输入密码",
                     focusedBorder: kLoginInputBorder,
                     errorBorder: kLoginInputBorder,

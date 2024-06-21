@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,13 +9,19 @@ import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/bean/banner_data.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/collection_controller.dart';
 import 'package:wan_giao_pro/controller/recommond_controller.dart';
+import 'package:wan_giao_pro/event/message_event.dart';
 import 'package:wan_giao_pro/theme/app_text.dart';
 
 class RecommendPage extends StatefulWidget {
+  RefreshController? refreshController;
+
+  RecommendPage(this.refreshController);
+
   @override
   State<RecommendPage> createState() => _RecommendPageState();
 }
@@ -21,19 +29,35 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage>
     with AutomaticKeepAliveClientMixin {
   RecommondController? _recommondController;
-
+  late  StreamSubscription<MessageEvent> actionEventBus;
+  GlobalKey _refresherKey = GlobalKey();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _recommondController = Get.put<RecommondController>(RecommondController());
+    _recommondController!.setRefreshController(widget.refreshController!);
+    actionEventBus = eventBus.on<MessageEvent>().listen((MessageEvent event) {
+      if(event.type==Constant.REFRESH_PAGE){
+        _recommondController!.refresh();
+      }
+    });
+
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    actionEventBus.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: GetX<RecommondController>(builder: (_) {
+    return Scaffold(body: GetX<RecommondController>(
+        builder: (_) {
       try {
         return SmartRefresher(
+             key:_refresherKey,
             controller: _recommondController!.refreshController!,
             header: WaterDropHeader(),
             enablePullUp: true,
@@ -222,7 +246,7 @@ class _RecommendPageState extends State<RecommendPage>
                       ],
                     ),
                     Expanded(
-                        flex: 3,
+                        flex: 30,
                         child: Container(
                           padding: EdgeInsets.only(top: 5, right: 5),
                           alignment: Alignment.centerLeft,
@@ -231,13 +255,14 @@ class _RecommendPageState extends State<RecommendPage>
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 17.sp,
-                                fontWeight: FontWeight.w900),
+                                fontWeight: FontWeight.w900,
+                            height: 1.3),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
                         )),
                     Expanded(
-                      flex: 2,
+                      flex: 15,
                       child: Container(
                         padding: EdgeInsets.only(top: 5, right: 5),
                         child: Text(
@@ -356,7 +381,7 @@ class _RecommendPageState extends State<RecommendPage>
                       ],
                     ),
                     Expanded(
-                        flex: 3,
+                        flex: 30,
                         child: Container(
                           padding: EdgeInsets.only(top: 5, right: 5),
                           alignment: Alignment.centerLeft,
@@ -365,14 +390,18 @@ class _RecommendPageState extends State<RecommendPage>
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 17.sp,
-                                fontWeight: FontWeight.w900),
+                                fontWeight: FontWeight.w900,
+                                 height: 1.3
+
+                            ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
                         )),
                     Expanded(
-                      flex: 2,
+                      flex: 15,
                       child: Container(
+                        alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(top: 5, right: 5),
                         child: Text(
                           "${articleItem.superChapterName}/${articleItem.chapterName}",
@@ -391,4 +420,5 @@ class _RecommendPageState extends State<RecommendPage>
       }, childCount: controller!.topArticleItems.length),
     );
   }
+
 }
