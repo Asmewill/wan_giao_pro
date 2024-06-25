@@ -86,13 +86,19 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
           right: 20,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
-              child: Text(
-                "跳过${timeCount}s",
-                style: TextStyle(color: Colors.white, fontSize: 12.sp),
+            child: InkWell(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                child: Text(
+                  "跳过${timeCount}s",
+                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                ),
+                color: Colors.black26.withOpacity(0.6),
               ),
-              color: Colors.black26.withOpacity(0.6),
+              onTap: (){
+                _timer!.cancel();
+                Get.offNamed("/index_page");
+              },
             ),
           ));
     } else {

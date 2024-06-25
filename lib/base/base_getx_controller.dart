@@ -45,6 +45,7 @@ abstract class BaseGetXController extends GetxController{
 
   void refresh(){
 
+
   }
 
 }

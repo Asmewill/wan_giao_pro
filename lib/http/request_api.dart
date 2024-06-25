@@ -13,5 +13,6 @@ class RequestApi{
   static const String USER_INFO="lg/coin/userinfo/json";
   static const String COUNT_UNREAD="message/lg/count_unread/json";
   static const String REGISTER="user/register";
+  static const String SYSTEM_TREE= "tree/json";
 
 }
