@@ -84,7 +84,7 @@ class _SquarePageState extends State<SquarePage>
             controller.refresh();
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS) {
+    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
       return ListView.separated(
           itemBuilder: (context, index) {
             ArticleItem articleItem = controller.articleItems[index];

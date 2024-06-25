@@ -47,7 +47,7 @@ class _SystemPageState extends State<SystemPage> {
             controller.getSystemList(true);
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS) {
+    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
       return ListView.builder(
           itemCount: controller.systemItems.length,
           itemBuilder: (context, index) {

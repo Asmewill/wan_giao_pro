@@ -90,7 +90,7 @@ class _RecommendPageState extends State<RecommendPage>
             controller.refresh();
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS) {
+    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
       return CustomScrollView(
         slivers: [
           _buildBannerUI(_recommondController!.bannerItems.value),

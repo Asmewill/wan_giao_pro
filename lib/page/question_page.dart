@@ -65,7 +65,7 @@ class _QuestionPageState extends State<QuestionPage> {
             controller.refresh();
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS) {
+    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value == LoadState.NO_MORE) {
       return ListView.separated(
           itemBuilder: (BuildContext context, int index) {
             QuestionItem questionItem = controller.questionItems[index];

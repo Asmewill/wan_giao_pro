@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wan_giao_pro/controller/wechat_controller.dart';
 
 class WechatContentPage extends StatefulWidget {
-  String id;
+  final String id;
   RefreshController refreshController;
 
   WechatContentPage(this.id, this.refreshController);
@@ -20,24 +20,27 @@ class WechatContentPage extends StatefulWidget {
 
 class _WechatContentPageState extends State<WechatContentPage>
     with AutomaticKeepAliveClientMixin {
-  WechatController? wechatController;
+  //WechatController? wechatController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    wechatController =
-        Get.put<WechatController>(WechatController(), tag: widget.id);
-    wechatController!.authorId = int.parse(widget.id);
-    wechatController!.setRefreshController(widget.refreshController);
+    // wechatController =
+    //     Get.put<WechatController>(WechatController(), tag: widget.id);
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetX<WechatController>(initState: (state) {
-      wechatController!.getTabContent(true);
+    return GetX<WechatController>(
+        init: Get.put<WechatController>(WechatController(), tag: widget.id),
+        initState: (state) {
+          Get.find<WechatController>(tag: widget.id).authorId = int.parse(widget.id);
+          Get.find<WechatController>(tag: widget.id).setRefreshController(widget.refreshController);
+          Get.find<WechatController>(tag: widget.id).getTabContent(true);
     }, builder: (_) {
-      return _bodyStateWidget(wechatController!);
+      return _bodyStateWidget( Get.find<WechatController>(tag: widget.id));
     });
   }
 
@@ -56,21 +59,22 @@ class _WechatContentPageState extends State<WechatContentPage>
             controller.refresh();
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS) {
+       //公众号Tab最后一列，没有更多数据 LoadState.NO_MORE
+    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
       return SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
         onLoading: () {
-          wechatController!.getTabContent(false);
+          controller!.getTabContent(false);
         },
         onRefresh: () {
-          wechatController!.refresh();
+          controller!.refresh();
         },
-        controller: wechatController!.refreshController!,
+        controller: controller!.refreshController!,
         child: ListView.builder(
-            itemCount: wechatController!.articleList.length,
+            itemCount: controller!.articleList.length,
             itemBuilder: (context, index) {
-              ArticleItem articleItem = wechatController!.articleList[index];
+              ArticleItem articleItem = controller!.articleList[index];
               return Container(
                 height: 100.h,
                 decoration: BoxDecoration(
