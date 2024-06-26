@@ -13,6 +13,7 @@ import 'package:wan_giao_pro/page/login_page.dart';
 import 'package:wan_giao_pro/page/register_page.dart';
 import 'package:wan_giao_pro/page/setting_page.dart';
 import 'package:wan_giao_pro/page/splash_page.dart';
+import 'package:wan_giao_pro/page/web_page.dart';
 
 import 'bindings/register_bindings.dart';
 import 'defalut/global.dart';
@@ -42,6 +43,10 @@ class MyApp extends StatelessWidget {
               name: "/register_page",
               page: () => RegisterPage(),
               bindings:[ RegisterBinds()],
+              transition: Transition.rightToLeft),
+          GetPage(
+              name: "/web_page",
+              page: () => WebPage(),
               transition: Transition.rightToLeft)
         ],
         localizationsDelegates: [

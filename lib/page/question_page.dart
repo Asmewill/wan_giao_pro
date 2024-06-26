@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/question_bean.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/question_controller.dart';
@@ -75,71 +76,80 @@ class _QuestionPageState extends State<QuestionPage> {
                 margin: EdgeInsets.only(
                     left: 8.w, top: 5.h, right: 8.w, bottom: 5.h),
                 elevation: 1.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 5.h,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 1, bottom: 1),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.green, width: 1)),
-                          child:
-                          Text(questionItem.tags?[0].name??"", style: TextStyle(fontSize: 10.sp)),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 5.w),
-                          padding: EdgeInsets.only(top: 1, bottom: 1),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.green, width: 1)),
-                          child: Text(questionItem.tags?[1].name??"", style: TextStyle(fontSize: 10.sp)),
-                        ),
-                        Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(right: 5),
-                              alignment: Alignment.centerRight,
-                              child: Text(getAuthor(questionItem)??"",
-                                  style: TextStyle(fontSize: 10.sp)),
-                            ))
-                      ],
-                    ),
-                    Container(
-                      height: 50.h,
-                      margin: EdgeInsets.only(left: 5, right: 5),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
+                child: InkWell(
+                  onTap: (){
+                    Get.toNamed("/web_page",arguments: {
+                      Constant.ARTICLE_TITLE:questionItem.title,
+                      Constant.ARTICLE_URL:questionItem.link,
+                      Constant.ARTICLE_AUTHOR:questionItem.author
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 5.h,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 1, bottom: 1),
+                            decoration: BoxDecoration(
+                                border:
+                                Border.all(color: Colors.green, width: 1)),
+                            child:
+                            Text(questionItem.tags?[0].name??"", style: TextStyle(fontSize: 10.sp)),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 5.w),
+                            padding: EdgeInsets.only(top: 1, bottom: 1),
+                            decoration: BoxDecoration(
+                                border:
+                                Border.all(color: Colors.green, width: 1)),
+                            child: Text(questionItem.tags?[1].name??"", style: TextStyle(fontSize: 10.sp)),
+                          ),
+                          Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 5),
+                                alignment: Alignment.centerRight,
+                                child: Text(getAuthor(questionItem)??"",
+                                    style: TextStyle(fontSize: 10.sp)),
+                              ))
+                        ],
+                      ),
+                      Container(
+                        height: 50.h,
+                        margin: EdgeInsets.only(left: 5, right: 5),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
                             questionItem.title??"",
-                          style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: 5,
+                            style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2),
                       ),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        questionItem.chapterName??""+"/"+(questionItem.superChapterName??"")+(questionItem.niceShareDate??""),
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: Colors.orange,
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: 5,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    )
-                  ],
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          questionItem.chapterName??""+"/"+(questionItem.superChapterName??"")+(questionItem.niceShareDate??""),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: Colors.orange,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/collection_controller.dart';
@@ -28,6 +29,7 @@ class _ProjectContentPageState extends State<ProjectContentPage>
   void initState() {
     // TODO: implement initState
     super.initState();
+    projectController=Get.put(ProjectController(),tag: widget.id);
     projectController!.setRefreshController(widget.refreshController);
     projectController!.cid = int.parse(widget.id);
     projectController!.getProjectList(true);
@@ -79,6 +81,13 @@ class _ProjectContentPageState extends State<ProjectContentPage>
                     border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5.w))
                 ),
                 child: InkWell(
+                  onTap: (){
+                    Get.toNamed("/web_page",arguments: {
+                      Constant.ARTICLE_TITLE:articleItem.title,
+                      Constant.ARTICLE_URL:articleItem.link,
+                      Constant.ARTICLE_AUTHOR:articleItem.author
+                    });
+                  },
                   child: Row(
                     children: [
                       IconButton(

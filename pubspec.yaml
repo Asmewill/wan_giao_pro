@@ -50,6 +50,7 @@ dependencies:
   event_bus: ^2.0.0
   #吸顶效果
   sticky_headers:
+  webview_flutter: 2.0.13
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

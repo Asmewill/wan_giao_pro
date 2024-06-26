@@ -4,6 +4,7 @@ import 'package:wan_giao_pro/compents/state_page.dart';
 
 import 'package:wan_giao_pro/controller/project_controller.dart';
 import 'package:get/get.dart';
+import 'package:wan_giao_pro/page/project_content_page.dart';
 import 'package:wan_giao_pro/page/wechat_content_page.dart';
 
 class ProjectPage extends StatefulWidget {
@@ -78,7 +79,7 @@ class _ProjectPageState extends State<ProjectPage>
           controller: _tabController,
           children: projectController.projectList
               .map((element) =>
-              WechatContentPage(
+              ProjectContentPage(
                   element.id.toString(), RefreshController()))
               .toList());
     }

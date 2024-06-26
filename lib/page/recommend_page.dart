@@ -118,11 +118,20 @@ class _RecommendPageState extends State<RecommendPage>
                   itemBuilder: (context, index) {
                     return ClipRRect(
                         borderRadius: BorderRadius.circular(8.w),
-                        child: CachedNetworkImage(
-                          imageUrl: banners[index].imagePath ?? "",
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                          fit: BoxFit.cover,
+                        child: InkWell(
+                          child: CachedNetworkImage(
+                            imageUrl: banners[index].imagePath ?? "",
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                          onTap: (){
+                            Get.toNamed("/web_page",arguments: {
+                              Constant.ARTICLE_TITLE:banners[index].title,
+                              Constant.ARTICLE_URL:banners[index].url,
+                              Constant.ARTICLE_AUTHOR:""
+                            });
+                          },
                         ));
                   },
                   itemCount: banners.length,
@@ -190,6 +199,13 @@ class _RecommendPageState extends State<RecommendPage>
                   bottom: BorderSide(
                       color: Colors.grey.withOpacity(0.4), width: 0.2.h))),
           child: InkWell(
+            onTap: (){
+              Get.toNamed("/web_page",arguments: {
+                Constant.ARTICLE_TITLE:articleItem.title,
+                Constant.ARTICLE_URL:articleItem.link,
+                Constant.ARTICLE_AUTHOR:articleItem.author
+              });
+            },
             child: Row(
               children: [
                 IconButton(
@@ -304,6 +320,13 @@ class _RecommendPageState extends State<RecommendPage>
                   bottom: BorderSide(
                       color: Colors.grey.withOpacity(0.4), width: 0.2.h))),
           child: InkWell(
+            onTap: (){
+              Get.toNamed("/web_page",arguments: {
+                Constant.ARTICLE_TITLE:articleItem.title,
+                Constant.ARTICLE_URL:articleItem.link,
+                Constant.ARTICLE_AUTHOR:articleItem.author
+              });
+            },
             child: Row(
               children: [
                 IconButton(

@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
-import 'package:wan_giao_pro/compents/extend_widget.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/collection_controller.dart';
 import 'package:wan_giao_pro/controller/square_controller.dart';
-import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wan_giao_pro/event/message_event.dart';
 
 class SquarePage extends StatefulWidget {
@@ -91,6 +90,13 @@ class _SquarePageState extends State<SquarePage>
             return Container(
               height: 100.h,
               child: InkWell(
+                onTap: (){
+                  Get.toNamed("/web_page",arguments: {
+                    Constant.ARTICLE_TITLE:articleItem.title,
+                    Constant.ARTICLE_URL:articleItem.link,
+                    Constant.ARTICLE_AUTHOR:articleItem.author
+                  });
+                },
                 child: Row(
                   children: [
                     IconButton(
