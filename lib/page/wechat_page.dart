@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
@@ -25,33 +26,38 @@ class _WeChatPageState extends State<WeChatPage> with TickerProviderStateMixin,A
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: wechatController.wechatList.length,
-        child: Scaffold(
-          appBar: AppBar(
-              brightness: Brightness.dark,
-              centerTitle: true,
-              title: Obx(() {
-                return TabBar(
-                    isScrollable: true,
-                    controller: _tabController,
-                    tabs: wechatController.wechatList
-                        .map((element) => Tab(
-                              text: element.name,
-                            ))
-                        .toList());
-              })),
-          body:GetX<WechatController>(builder: (_){
-            _tabController = TabController(
-                length: wechatController.wechatList.length,
-                initialIndex: wechatController.iniItemIndex,
-                vsync: this);
-            _tabController!.addListener(() {
-              wechatController.iniItemIndex = _tabController!.index;
-            });
-            return _bodyStateWidget(wechatController);
-          }),
-        ));
+
+    return MediaQuery(data:  MediaQuery.of(context).copyWith(
+      // 确保此处的brightness与你期望的状态栏文字颜色相符
+      platformBrightness: Brightness.dark,
+    ), child:  AnnotatedRegion(child: Scaffold(
+      appBar: AppBar(
+          brightness: Brightness.light,// 状态栏的文字颜色为黑色
+          centerTitle: true,
+          title: Obx(() {
+            return TabBar(
+                isScrollable: true,
+                controller: _tabController,
+                tabs: wechatController.wechatList
+                    .map((element) => Tab(
+                  text: element.name,
+                ))
+                    .toList());
+          })),
+      body:GetX<WechatController>(builder: (_){
+        _tabController = TabController(
+            length: wechatController.wechatList.length,
+            initialIndex: wechatController.iniItemIndex,
+            vsync: this);
+        _tabController!.addListener(() {
+          wechatController.iniItemIndex = _tabController!.index;
+        });
+        return _bodyStateWidget(wechatController);
+      }),
+    ), value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark
+    )));
   }
 
 

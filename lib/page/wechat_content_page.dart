@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/app/constant.dart';
@@ -23,6 +24,7 @@ class _WechatContentPageState extends State<WechatContentPage>
     with AutomaticKeepAliveClientMixin {
   //WechatController? wechatController;
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -34,6 +36,7 @@ class _WechatContentPageState extends State<WechatContentPage>
 
   @override
   Widget build(BuildContext context) {
+
     return GetX<WechatController>(
         init: Get.put<WechatController>(WechatController(), tag: widget.id),
         initState: (state) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_giao_pro/compents/icon_font.dart';
 import 'package:wan_giao_pro/page/home_page.dart';
@@ -29,6 +30,7 @@ class _IndexPageState extends State<IndexPage> {
     // TODO: implement initState
     super.initState();
     controller=PageController(initialPage: _pageIndex);
+
   }
   @override
   Widget build(BuildContext context) {
