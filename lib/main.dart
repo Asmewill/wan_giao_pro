@@ -13,6 +13,7 @@ import 'package:wan_giao_pro/page/login_page.dart';
 import 'package:wan_giao_pro/page/register_page.dart';
 import 'package:wan_giao_pro/page/setting_page.dart';
 import 'package:wan_giao_pro/page/splash_page.dart';
+import 'package:wan_giao_pro/page/system_content_page.dart';
 import 'package:wan_giao_pro/page/web_page.dart';
 
 import 'bindings/register_bindings.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
+        hideFooterWhenNotFull: false,
         child: OKToast(
       child: GetMaterialApp(
         locale: _currentLocale,
@@ -47,6 +49,10 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: "/web_page",
               page: () => WebPage(),
+              transition: Transition.rightToLeft),
+          GetPage(
+              name: "/system_content_page",
+              page: () => SystemContentPage(),
               transition: Transition.rightToLeft)
         ],
         localizationsDelegates: [

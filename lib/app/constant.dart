@@ -6,5 +6,6 @@ class Constant{
   static const String ARTICLE_TITLE="article_title";
   static const String ARTICLE_URL="article_url";
   static const String ARTICLE_AUTHOR="article_author";
-
+  static const String TAB_BEAN="tab_bean";
+  static const String TAB_INDEX="tab_index";
 }

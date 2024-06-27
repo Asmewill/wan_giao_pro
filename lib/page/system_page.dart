@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/system_bean.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/square_controller.dart';
@@ -47,7 +48,8 @@ class _SystemPageState extends State<SystemPage> {
             controller.getSystemList(true);
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
+    } else if (controller.loadState.value == LoadState.SUCCESS ||
+        controller.loadState.value == LoadState.NO_MORE) {
       return ListView.builder(
           itemCount: controller.systemItems.length,
           itemBuilder: (context, index) {
@@ -64,7 +66,7 @@ class _SystemPageState extends State<SystemPage> {
                               color: Colors.grey.withOpacity(0.1),
                               width: 1.h))),
                   child: Text(
-                    systemItem.name??"",
+                    systemItem.name ?? "",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,
@@ -78,10 +80,15 @@ class _SystemPageState extends State<SystemPage> {
                     runSpacing: 5.0.h,
                     children: systemItem.children!
                         .map((Children children) => ActionChip(
-                            label: Text(children.name??""),
+                            label: Text(children.name ?? ""),
                             backgroundColor: Colors.primaries[
                                 Random().nextInt(Colors.primaries.length)],
-                            onPressed: () {}))
+                            onPressed: () {
+                              Get.toNamed("/system_content_page",arguments: {
+                                Constant.TAB_INDEX:systemController.systemItems[index].children!.indexOf(children),
+                                Constant.TAB_BEAN:systemController.systemItems[index]
+                              });
+                            }))
                         .toList(),
                   ),
                 ));
