@@ -29,34 +29,32 @@ class _ProjectPageState extends State<ProjectPage>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: projectController!.projectList.length,
-        child: Scaffold(
-          appBar: AppBar(
-              brightness: Brightness.light,// 状态栏的文字颜色为黑色
-              centerTitle: true,
-              title: Obx(() {
-                return TabBar(
-                    isScrollable: true,
-                    controller: _tabController,
-                    tabs: projectController.projectList
-                        .map((element) => Tab(
-                              text: element.name,
-                            ))
-                        .toList());
-              })),
-          body: GetX<ProjectController>(builder: (_) {
-            _tabController = TabController(
-                length: projectController.projectList.length,
-                initialIndex: projectController.iniItemIndex,
-                vsync: this);
-            _tabController!.addListener(() {
-              projectController.iniItemIndex = _tabController!.index;
-            });
-            return _bodyStateWidget(projectController);
+    return  Scaffold(
+      appBar: AppBar(
+          brightness: Brightness.light,// 状态栏的文字颜色为黑色
+          centerTitle: true,
+          title: Obx(() {
+            return TabBar(
+                isScrollable: true,
+                controller: _tabController,
+                tabs: projectController.projectList
+                    .map((element) => Tab(
+                  text: element.name,
+                ))
+                    .toList());
+          })),
+      body: GetX<ProjectController>(builder: (_) {
+        _tabController = TabController(
+            length: projectController.projectList.length,
+            initialIndex: projectController.iniItemIndex,
+            vsync: this);
+        _tabController!.addListener(() {
+          projectController.iniItemIndex = _tabController!.index;
+        });
+        return _bodyStateWidget(projectController);
 
-          }),
-        ));
+      }),
+    );
   }
 
   _bodyStateWidget(ProjectController controller) {
