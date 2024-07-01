@@ -29,10 +29,10 @@ class _PersonPageState extends State<PersonPage> {
               Line(),
               _menuIconWidget(),
               Line(),
-              Expanded(
-                child: Container(),
-                flex: 1,
-              )
+              // Expanded(
+              //   child: Container(),
+              //   flex: 1,
+              // )
             ],
           ),
         ));
@@ -208,7 +208,9 @@ class _PersonPageState extends State<PersonPage> {
                   Colors.black,
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed("/collection_page");
+                  },
                 ),
               )),
           Expanded(
@@ -222,7 +224,9 @@ class _PersonPageState extends State<PersonPage> {
                   Colors.black,
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed("/share_page");
+                  },
                 ),
               )),
           Expanded(
@@ -236,7 +240,9 @@ class _PersonPageState extends State<PersonPage> {
                   Colors.black,
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed("/point_page");
+                  },
                 ),
               )),
           Expanded(
@@ -250,7 +256,9 @@ class _PersonPageState extends State<PersonPage> {
                   Colors.black,
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed("/rank_page");
+                  },
                 ),
               ))
         ],

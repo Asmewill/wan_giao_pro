@@ -8,10 +8,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/bindings/collection_binds.dart';
 import 'package:wan_giao_pro/bindings/login_bindings.dart';
 import 'package:wan_giao_pro/bindings/square_bindings.dart';
+import 'package:wan_giao_pro/page/collection_page.dart';
 import 'package:wan_giao_pro/page/index_page.dart';
 import 'package:wan_giao_pro/page/login_page.dart';
+import 'package:wan_giao_pro/page/point_page.dart';
+import 'package:wan_giao_pro/page/rank_page.dart';
 import 'package:wan_giao_pro/page/register_page.dart';
 import 'package:wan_giao_pro/page/setting_page.dart';
+import 'package:wan_giao_pro/page/share_page.dart';
 import 'package:wan_giao_pro/page/splash_page.dart';
 import 'package:wan_giao_pro/page/system_content_page.dart';
 import 'package:wan_giao_pro/page/web_page.dart';
@@ -33,41 +37,63 @@ class MyApp extends StatelessWidget {
     return RefreshConfiguration(
         hideFooterWhenNotFull: false,
         child: OKToast(
-      child: GetMaterialApp(
-        locale: _currentLocale,
-        initialRoute: "/",
-        getPages: [
-          GetPage(name: "/", page: () => SplashPage()),
-          GetPage(name: "/index_page", page: () => IndexPage(),bindings: [CollectionBinds()]),
-          GetPage(name: "/setting_page", page: () => SettingPage()),
-          GetPage(name: "/login_page", page: () => LoginPage(), bindings: [LoginBindings()]),
-          GetPage(
-              name: "/register_page",
-              page: () => RegisterPage(),
-              bindings:[ RegisterBinds()],
-              transition: Transition.rightToLeft),
-          GetPage(
-              name: "/web_page",
-              page: () => WebPage(),
-              transition: Transition.rightToLeft),
-          GetPage(
-              name: "/system_content_page",
-              page: () => SystemContentPage(),
-              transition: Transition.rightToLeft)
-        ],
-        localizationsDelegates: [
-          // 这行是关键
-          RefreshLocalizations.delegate,//下拉刷新库支持多语言配置
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('zh', 'CH'),
-          const Locale('en', 'US'),
-        ],
-        debugShowCheckedModeBanner: true,
-      ),
-    ));
+          child: GetMaterialApp(
+            locale: _currentLocale,
+            initialRoute: "/",
+            getPages: [
+              GetPage(name: "/", page: () => SplashPage()),
+              GetPage(
+                  name: "/index_page",
+                  page: () => IndexPage(),
+                  bindings: [CollectionBinds()]),
+              GetPage(name: "/setting_page", page: () => SettingPage()),
+              GetPage(
+                  name: "/login_page",
+                  page: () => LoginPage(),
+                  bindings: [LoginBindings()]),
+              GetPage(
+                  name: "/register_page",
+                  page: () => RegisterPage(),
+                  bindings: [RegisterBinds()],
+                  transition: Transition.rightToLeft),
+              GetPage(
+                  name: "/web_page",
+                  page: () => WebPage(),
+                  transition: Transition.rightToLeft),
+              GetPage(
+                  name: "/system_content_page",
+                  page: () => SystemContentPage(),
+                  transition: Transition.rightToLeft),
+              GetPage(
+                  name: "/collection_page",
+                  page: () => CollectionPage(),
+                  transition: Transition.fadeIn),
+              GetPage(
+                  name: "/share_page",
+                  page: () => SharePage(),
+                  transition: Transition.fadeIn),
+              GetPage(
+                  name: "/point_page",
+                  page: () => PointPage(),
+                  transition: Transition.fadeIn),
+              GetPage(
+                  name: "/rank_page",
+                  page: () => RankPage(),
+                  transition: Transition.fadeIn),
+            ],
+            localizationsDelegates: [
+              // 这行是关键
+              RefreshLocalizations.delegate, //下拉刷新库支持多语言配置
+              GlobalWidgetsLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              const Locale('zh', 'CH'),
+              const Locale('en', 'US'),
+            ],
+            debugShowCheckedModeBanner: true,
+          ),
+        ));
   }
 }
