@@ -24,7 +24,7 @@ class _ProjectPageState extends State<ProjectPage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    projectController.getProjectList(true);
+    projectController.getProjectTabs();
   }
 
   @override

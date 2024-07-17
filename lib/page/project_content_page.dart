@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
@@ -90,37 +91,13 @@ class _ProjectContentPageState extends State<ProjectContentPage>
                   },
                   child: Row(
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            CollectionController collectionController =
-                            Get.find<CollectionController>();
-                            if (articleItem.collect ?? false) {
-                              collectionController.unCollectionArticle(
-                                  articleItem.id.toString(),() {
-                                articleItem.setCollect = false;
-                                setState(() {});
-                              }, (value) {
-                                showToast(value);
-                              });
-                            } else {
-                              collectionController.collectArticle(
-                                  articleItem.id.toString(), () {
-                                articleItem.setCollect = true;
-                                showToast("收藏成功");
-                                setState(() {});
-                              }, (value) {
-                                showToast(value);
-                              });
-                            }
-                          },
-                          icon: articleItem.collect ?? false
-                              ? Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                          )
-                              : Icon(
-                            Icons.favorite_border,
-                          )),
+                      CachedNetworkImage(
+                        imageUrl: articleItem.envelopePic??"",
+                        fit: BoxFit.fill,
+                        width: 80.w,
+                        height: 120.h,
+                      ),
+                      SizedBox(width: 10),
                       Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

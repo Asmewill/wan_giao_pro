@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/bean/article_item.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/collection_controller.dart';
@@ -102,7 +103,11 @@ class _PersonCollectPageState extends State<PersonCollectPage> {
                 child: Card(
                   child: InkWell(
                     onTap: () {
-                      showToast("msg");
+                      Get.toNamed("/web_page", arguments: {
+                        Constant.ARTICLE_TITLE: item.title,
+                        Constant.ARTICLE_URL: item.link,
+                        Constant.ARTICLE_AUTHOR: item.author
+                      });
                     },
                     child: Container(
                       //   color: Colors.white,//水波纹失效

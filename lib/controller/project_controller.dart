@@ -19,12 +19,12 @@ class ProjectController extends BaseGetXControllerWithRefresh {
   @override
   void onInit() {
     super.onInit();
-    getProjectTabs();
+
   }
 
-  @override
-  void onRefresh() {
-    getProjectTabs();
+  void refresh() {
+    pageIndex=0;
+    getProjectList(true);
   }
 
   ///获取项目的分类
@@ -62,10 +62,9 @@ class ProjectController extends BaseGetXControllerWithRefresh {
           }else {
             loadState.value=LoadState.SUCCESS;
             refreshController!.loadComplete();
-            refreshController!.refreshCompleted(resetFooterState: true);
             pageIndex++;
           }
-
+          refreshController!.refreshCompleted(resetFooterState: true);
         },
         failture: (dynamic value) {
           refreshController!.refreshFailed();
@@ -73,4 +72,6 @@ class ProjectController extends BaseGetXControllerWithRefresh {
           showToast(value);
         });
   }
+
+
 }

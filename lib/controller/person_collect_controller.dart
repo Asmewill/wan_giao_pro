@@ -14,7 +14,6 @@ class PersonCollectController extends BaseGetXControllerWithRefresh {
 
 
   void getCollectionList(bool isShowLoading) {
-    pageIndex = 0;
     handlerRequest(HttpManager.instance.get("lg/collect/list/$pageIndex/json"),
         isShowLoading, success: (dynamic value) {
       var result = ArticleData.fromJson(value).data;

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_giao_pro/app/app_state.dart';
+import 'package:wan_giao_pro/app/constant.dart';
 import 'package:wan_giao_pro/compents/extend_widget.dart';
 import 'package:wan_giao_pro/compents/icon_text_widget.dart';
 import 'package:wan_giao_pro/controller/user_info_controller.dart';
@@ -218,14 +219,18 @@ class _PersonPageState extends State<PersonPage> {
               child: Container(
                 height: double.infinity,
                 child: IconTextWidget(
-                  Icons.share,
-                  "分享",
+                  Icons.web_outlined,
+                  "官网",
                   13,
                   Colors.black,
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
                   onTap: () {
-                    Get.toNamed("/share_page");
+                    Get.toNamed("/web_page", arguments: {
+                      Constant.ARTICLE_TITLE: "玩Android",
+                      Constant.ARTICLE_URL: "https://www.wanandroid.com/",
+                      Constant.ARTICLE_AUTHOR: "鸿阳"
+                    });
                   },
                 ),
               )),

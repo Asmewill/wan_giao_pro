@@ -12,12 +12,12 @@ class RankPage extends StatelessWidget {
       body: GetX<RankController>(
         init: Get.put<RankController>(RankController()),
         initState: (_) {
+          Get.find<RankController>().scrollController.addListener(() {
+            Get.find<RankController>().offset.value =
+                (Get.find<RankController>().scrollController.offset);
+          });
           Get.find<RankController>()
               .setRefreshController(new RefreshController());
-          Get.find<RankController>().scrollController.addListener(() {
-            Get.find<RankController>()
-                .setOffset(Get.find<RankController>().scrollController.offset);
-          });
           Get.find<RankController>().getRankList(true);
         },
         builder: (RankController controller) {
@@ -30,10 +30,7 @@ class RankPage extends StatelessWidget {
             },
             child: CustomScrollView(
               controller: Get.find<RankController>().scrollController,
-              slivers: [
-                _buildTopUI(controller),
-                _bodyStateWidget(controller, context)
-              ],
+              slivers: [_buildTopUI(controller), _bodyStateWidget(controller)],
             ),
           );
         },
@@ -43,7 +40,7 @@ class RankPage extends StatelessWidget {
 
   _buildTopUI(RankController controller) {
     return SliverAppBar(
-      title: Text("排行榜"),
+      title: controller.offset>120?Text("排行榜"):Container(),
       pinned: true,
       stretch: true,
       backgroundColor: Colors.green,
@@ -65,42 +62,75 @@ class RankPage extends StatelessWidget {
                   colors: [Colors.orange, Colors.orangeAccent, Colors.grey],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter)),
-          child: Center(child: _buildTopContent(controller)),
+          child: Center(
+              child: controller.rankItems.length >= 3
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/icon/ic_no_2.png",
+                              width: 30,
+                              height: 30,
+                            ),
+                            Text(
+                              "${controller.rankItems[1].username}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            Text("${controller.rankItems[1].coinCount}",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12))
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/icon/ic_no_1.png",
+                              width: 50,
+                              height: 50,
+                            ),
+                            Text(
+                              "${controller.rankItems[0].username}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            Text("${controller.rankItems[0].coinCount}",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12))
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/icon/ic_no_3.png",
+                              width: 30,
+                              height: 30,
+                            ),
+                            Text(
+                              "${controller.rankItems[2].username}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            Text("${controller.rankItems[2].coinCount}",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12))
+                          ],
+                        ),
+                      ],
+                    )
+                  : Container()),
         ),
       ),
       expandedHeight: 180.h,
     );
   }
 
-  Widget _buildTopContent(RankController model) {
-    return model.coins.length >= 3
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-                LeaderBoardIcon(
-                  icon: "assets/icon/ic_no_2.png",
-                  iconSize: 40,
-                  name: model.coins[1].username ?? "",
-                  coins: model.coins[1].coinCount.toString(),
-                ),
-                LeaderBoardIcon(
-                  icon: "assets/icon/ic_no_1.png",
-                  iconSize: 55,
-                  name: model.coins[0].username ?? "",
-                  coins: model.coins[0].coinCount.toString(),
-                ),
-                LeaderBoardIcon(
-                  icon: "assets/icon/ic_no_3.png",
-                  iconSize: 40,
-                  name: model.coins[2].username ?? "",
-                  coins: model.coins[2].coinCount.toString(),
-                ),
-              ])
-        : Container();
-  }
-
-  _bodyStateWidget(RankController controller, BuildContext context) {
+  _bodyStateWidget(RankController controller) {
     if (controller.loadState.value == LoadState.LOADING) {
       return SliverFillRemaining(
         child: LoadingPage(),
@@ -125,52 +155,62 @@ class RankPage extends StatelessWidget {
     } else if (controller.loadState.value == LoadState.SUCCESS ||
         controller.loadState.value == LoadState.NO_MORE) {
       return SliverList(
-          delegate: SliverChildListDelegate(
-              controller.coins.getRange(3, controller.coins.length).map((e) {
-        return ListTile(
-            title: Text(e.username ?? "",
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline3!.color)),
-            subtitle: Text(e.userId.toString(),
-                style: Theme.of(context).textTheme.subtitle1),
-            trailing: Text(e.coinCount.toString(),
-                style: Theme.of(context).textTheme.subtitle1),
-            leading: Container(
-                width: 30.w,
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  child: Text(e.rank ?? ""),
-                )));
+          delegate: SliverChildListDelegate(controller.rankItems
+              .getRange(3, controller.rankItems.length)
+              .map((rankItem) {
+        return Container(
+          margin: EdgeInsets.only(left: 20, right: 20),
+          height: 50,
+          color: Colors.white,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      width: 25,
+                      height: 25,
+                      child: Text(
+                        rankItem.rank.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          rankItem.username.toString(),
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                        ),
+                        Text(rankItem.userId.toString(),
+                            style: TextStyle(color: Colors.grey, fontSize: 13))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    child: Text(
+                      rankItem.coinCount.toString(),
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
+                  ))
+            ],
+          ),
+        );
       }).toList()));
     }
-  }
-}
-
-class LeaderBoardIcon extends StatelessWidget {
-  final String icon;
-  final String name;
-  final String coins;
-  final double iconSize;
-  final double textSize;
-
-  LeaderBoardIcon(
-      {Key? key,
-      this.icon = "",
-      this.name = "",
-      this.coins = "",
-      this.iconSize = 0.00,
-      this.textSize = 12.0})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(icon, width: iconSize, height: iconSize),
-        Text(name, style: TextStyle(fontSize: textSize, color: Colors.white)),
-        Text(coins, style: TextStyle(fontSize: textSize, color: Colors.white))
-      ],
-    );
   }
 }
