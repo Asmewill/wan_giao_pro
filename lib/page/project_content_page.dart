@@ -96,7 +96,7 @@ class _ProjectContentPageState extends State<ProjectContentPage>
                             Get.find<CollectionController>();
                             if (articleItem.collect ?? false) {
                               collectionController.unCollectionArticle(
-                                  articleItem.id.toString(), () {
+                                  articleItem.id.toString(),() {
                                 articleItem.setCollect = false;
                                 setState(() {});
                               }, (value) {

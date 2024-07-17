@@ -65,6 +65,7 @@ class ArticleItem {
     num? shareDate,
     String? shareUser,
     num? superChapterId,
+    int? originId,
     String? superChapterName,
     List<Tags>? tags,
     String? title,
@@ -101,6 +102,7 @@ class ArticleItem {
     _shareUser = shareUser;
     _superChapterId = superChapterId;
     _superChapterName = superChapterName;
+    _originId=originId;
     _tags = tags;
     _title = title;
     _type = type;
@@ -139,6 +141,7 @@ class ArticleItem {
     _shareUser = json['shareUser'];
     _superChapterId = json['superChapterId'];
     _superChapterName = json['superChapterName'];
+    _originId=json['originId'];
     if (json['tags'] != null) {
       _tags = [];
       json['tags'].forEach((v) {
@@ -180,6 +183,7 @@ class ArticleItem {
   String? _shareUser;
   num? _superChapterId;
   String? _superChapterName;
+  int? _originId;
   List<Tags>? _tags;
   String? _title;
   num? _type;
@@ -216,6 +220,7 @@ class ArticleItem {
   String? get shareUser => _shareUser;
   num? get superChapterId => _superChapterId;
   String? get superChapterName => _superChapterName;
+  int? get originId => _originId;
   List<Tags>? get tags => _tags;
   String? get title => _title;
   num? get type => _type;

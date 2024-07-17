@@ -97,7 +97,7 @@ class _SystemContentListPageState extends State<SystemContentListPage>
                                 Get.find<CollectionController>();
                             if (articleItem.collect ?? false) {
                               collectionController.unCollectionArticle(
-                                  articleItem.id.toString(), () {
+                                  articleItem.id.toString(),() {
                                 articleItem.setCollect = false;
                                 setState(() {});
                               }, (value) {

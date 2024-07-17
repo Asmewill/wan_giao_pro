@@ -51,6 +51,8 @@ dependencies:
   #吸顶效果
   sticky_headers:
   webview_flutter: 2.0.13
+  #滑动删除
+  flutter_slidable: ^0.6.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

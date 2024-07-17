@@ -105,7 +105,7 @@ class _SquarePageState extends State<SquarePage>
                           Get.find<CollectionController>();
                           if (articleItem.collect ?? false) {
                             collectionController
-                                .unCollectionArticle(articleItem.id.toString(), () {
+                                .unCollectionArticle(articleItem.id.toString(),() {
                               articleItem.setCollect = false;
                               setState(() {});
                             }, (value) {

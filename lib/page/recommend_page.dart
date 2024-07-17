@@ -209,7 +209,28 @@ class _RecommendPageState extends State<RecommendPage>
             child: Row(
               children: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      CollectionController collectionController =
+                      Get.find<CollectionController>();
+                      if (articleItem.collect ?? false) {
+                        collectionController
+                            .unCollectionArticle(articleItem.id.toString(), () {
+                          articleItem.setCollect = false;
+                          setState(() {});
+                        }, (value) {
+                          showToast(value);
+                        });
+                      } else {
+                        collectionController
+                            .collectArticle(articleItem.id.toString(), () {
+                          articleItem.setCollect = true;
+                          showToast("收藏成功");
+                          setState(() {});
+                        }, (value) {
+                          showToast(value);
+                        });
+                      }
+                    },
                     icon: articleItem.collect ?? false
                         ? Icon(
                             Icons.favorite,

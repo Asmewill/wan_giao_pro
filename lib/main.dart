@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -7,10 +6,9 @@ import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/bindings/collection_binds.dart';
 import 'package:wan_giao_pro/bindings/login_bindings.dart';
-import 'package:wan_giao_pro/bindings/square_bindings.dart';
-import 'package:wan_giao_pro/page/collection_page.dart';
 import 'package:wan_giao_pro/page/index_page.dart';
 import 'package:wan_giao_pro/page/login_page.dart';
+import 'package:wan_giao_pro/page/person_collect_page.dart';
 import 'package:wan_giao_pro/page/point_page.dart';
 import 'package:wan_giao_pro/page/rank_page.dart';
 import 'package:wan_giao_pro/page/register_page.dart';
@@ -66,7 +64,7 @@ class MyApp extends StatelessWidget {
                   transition: Transition.rightToLeft),
               GetPage(
                   name: "/collection_page",
-                  page: () => CollectionPage(),
+                  page: () => PersonCollectPage(),
                   transition: Transition.fadeIn),
               GetPage(
                   name: "/share_page",
@@ -75,11 +73,13 @@ class MyApp extends StatelessWidget {
               GetPage(
                   name: "/point_page",
                   page: () => PointPage(),
-                  transition: Transition.fadeIn),
+                  transition: Transition.fadeIn
+              ),
               GetPage(
                   name: "/rank_page",
                   page: () => RankPage(),
-                  transition: Transition.fadeIn),
+                 // transition: Transition.fadeIn
+              ),
             ],
             localizationsDelegates: [
               // 这行是关键

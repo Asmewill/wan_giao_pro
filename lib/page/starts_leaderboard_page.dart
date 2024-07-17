@@ -3,76 +3,79 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
-import 'package:wan_giao_pro/controller/rank_controller.dart';
+import 'package:wan_giao_pro/controller/starts_leader_controller.dart';
 
-class RankPage extends StatelessWidget {
+
+///排行榜
+class StarsLeaderboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: GetX<RankController>(
-        init: Get.put<RankController>(RankController()),
+        body: GetX<StarsLeaderController>(
+        init:Get.put(StarsLeaderController()) ,
         initState: (_) {
-          Get.find<RankController>()
-              .setRefreshController(new RefreshController());
-          Get.find<RankController>().scrollController.addListener(() {
-            Get.find<RankController>()
-                .setOffset(Get.find<RankController>().scrollController.offset);
-          });
-          Get.find<RankController>().getRankList(true);
-        },
-        builder: (RankController controller) {
-          return SmartRefresher(
-            controller: controller!.refreshController!,
-            enablePullUp: true,
-            enablePullDown: false,
-            onLoading: () async {
-              controller.getRankList(false);
-            },
-            child: CustomScrollView(
-              controller: Get.find<RankController>().scrollController,
-              slivers: [
-                _buildTopUI(controller),
-                _bodyStateWidget(controller, context)
-              ],
-            ),
-          );
-        },
-      ),
-    );
+        Get.find<StarsLeaderController>().setRefreshController(new RefreshController());
+        Get.find<StarsLeaderController>().scrollController.addListener(() {
+          Get.find<StarsLeaderController>().setOffset(
+              Get.find<StarsLeaderController>().scrollController.offset);
+        });
+        Get.find<StarsLeaderController>().getStarsLeaderBoard(true);
+      },
+      builder: (controller) {
+        return SmartRefresher(
+          controller: controller.refreshController!,
+          enablePullUp: true,
+          enablePullDown: false,
+          onLoading: () async {
+            controller.getStarsLeaderBoard(false);
+          },
+          child: CustomScrollView(
+            controller: controller.scrollController,
+            slivers: [
+              _buildTopUI(controller),
+              _buildBodyContent(context, controller)
+            ],
+          ),
+        );
+      },
+    ));
   }
 
-  _buildTopUI(RankController controller) {
+  ///头部UI
+  Widget _buildTopUI(StarsLeaderController model) {
     return SliverAppBar(
-      title: Text("排行榜"),
+      title: model.offset >= 120 ? Text("排行榜") : Container(),
       pinned: true,
       stretch: true,
-      backgroundColor: Colors.green,
-      brightness: Brightness.light,
-      //状态栏的文字颜色为黑色
+      brightness: Brightness.dark,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
+        icon: Icon(Icons.arrow_back),
         onPressed: () {
           Get.back();
         },
       ),
       elevation: 0.0,
       flexibleSpace: FlexibleSpaceBar(
-        stretchModes: [StretchMode.fadeTitle, StretchMode.zoomBackground],
+        stretchModes: [
+          StretchMode.fadeTitle,
+          StretchMode.zoomBackground,
+        ],
         background: Container(
-          padding: EdgeInsets.only(top: ScreenUtil().statusBarHeight + 50.h),
-          decoration: BoxDecoration(
+            padding: EdgeInsets.only(top: ScreenUtil().statusBarHeight + 50.h),
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                   colors: [Colors.orange, Colors.orangeAccent, Colors.grey],
                   begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
-          child: Center(child: _buildTopContent(controller)),
-        ),
+                  end: Alignment.bottomCenter),
+            ),
+            child: Center(child: _buildTopContent(model))),
       ),
       expandedHeight: 180.h,
     );
   }
 
-  Widget _buildTopContent(RankController model) {
+  Widget _buildTopContent(StarsLeaderController model) {
     return model.coins.length >= 3
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -81,54 +84,44 @@ class RankPage extends StatelessWidget {
                 LeaderBoardIcon(
                   icon: "assets/icon/ic_no_2.png",
                   iconSize: 40,
-                  name: model.coins[1].username ?? "",
+                  name: model.coins[1].username??"",
                   coins: model.coins[1].coinCount.toString(),
                 ),
                 LeaderBoardIcon(
                   icon: "assets/icon/ic_no_1.png",
                   iconSize: 55,
-                  name: model.coins[0].username ?? "",
+                  name: model.coins[0].username??"",
                   coins: model.coins[0].coinCount.toString(),
                 ),
                 LeaderBoardIcon(
                   icon: "assets/icon/ic_no_3.png",
                   iconSize: 40,
-                  name: model.coins[2].username ?? "",
+                  name: model.coins[2].username??"",
                   coins: model.coins[2].coinCount.toString(),
                 ),
               ])
         : Container();
   }
 
-  _bodyStateWidget(RankController controller, BuildContext context) {
-    if (controller.loadState.value == LoadState.LOADING) {
+  Widget _buildBodyContent(BuildContext context, StarsLeaderController model) {
+    if (model.loadState.value == LoadState.EMPTY) {
+      return SliverFillRemaining(
+        child: EmptyPage(),
+      );
+    } else if (model.loadState.value == LoadState.FAILURE) {
+      return SliverFillRemaining(
+        child: NetWorkErrorPage(),
+      );
+    } else if (model.loadState.value == LoadState.LOADING) {
       return SliverFillRemaining(
         child: LoadingPage(),
       );
-    } else if (controller.loadState.value == LoadState.EMPTY) {
-      return SliverFillRemaining(
-        child: EmptyPage(
-          onPressed: () {
-            controller.refresh();
-          },
-        ),
-      );
-    } else if (controller.loadState.value == LoadState.FAILURE) {
-      return SliverFillRemaining(
-        child: NetWorkErrorPage(
-            onPressed: () {
-              controller.refresh();
-            },
-            errorMsg: "网络加载失败,请稍后重试!!!"),
-      );
-      //公众号Tab最后一列，没有更多数据 LoadState.NO_MORE
-    } else if (controller.loadState.value == LoadState.SUCCESS ||
-        controller.loadState.value == LoadState.NO_MORE) {
-      return SliverList(
-          delegate: SliverChildListDelegate(
-              controller.coins.getRange(3, controller.coins.length).map((e) {
+    }
+    return SliverList(
+      delegate: SliverChildListDelegate(
+          model.coins.getRange(3, model.coins.length).map((e) {
         return ListTile(
-            title: Text(e.username ?? "",
+            title: Text(e.username??"",
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline3!.color)),
             subtitle: Text(e.userId.toString(),
@@ -139,10 +132,10 @@ class RankPage extends StatelessWidget {
                 width: 30.w,
                 alignment: Alignment.center,
                 child: CircleAvatar(
-                  child: Text(e.rank ?? ""),
+                  child: Text(e.rank??""),
                 )));
-      }).toList()));
-    }
+      }).toList()),
+    );
   }
 }
 
