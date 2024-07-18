@@ -29,8 +29,9 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage>
     with AutomaticKeepAliveClientMixin {
   RecommondController? _recommondController;
-  late  StreamSubscription<MessageEvent> actionEventBus;
+  late StreamSubscription<MessageEvent> actionEventBus;
   GlobalKey _refresherKey = GlobalKey();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,12 +39,12 @@ class _RecommendPageState extends State<RecommendPage>
     _recommondController = Get.put<RecommondController>(RecommondController());
     _recommondController!.setRefreshController(widget.refreshController!);
     actionEventBus = eventBus.on<MessageEvent>().listen((MessageEvent event) {
-      if(event.type==Constant.REFRESH_PAGE){
+      if (event.type == Constant.REFRESH_PAGE) {
         _recommondController!.refresh();
       }
     });
-
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -53,11 +54,10 @@ class _RecommendPageState extends State<RecommendPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: GetX<RecommondController>(
-        builder: (_) {
+    return Scaffold(body: GetX<RecommondController>(builder: (_) {
       try {
         return SmartRefresher(
-             key:_refresherKey,
+            key: _refresherKey,
             controller: _recommondController!.refreshController!,
             header: WaterDropHeader(),
             enablePullUp: true,
@@ -90,7 +90,8 @@ class _RecommendPageState extends State<RecommendPage>
             controller.refresh();
           },
           errorMsg: "网络加载失败,请稍后重试!!!");
-    } else if (controller.loadState.value == LoadState.SUCCESS||controller.loadState.value==LoadState.NO_MORE) {
+    } else if (controller.loadState.value == LoadState.SUCCESS ||
+        controller.loadState.value == LoadState.NO_MORE) {
       return CustomScrollView(
         slivers: [
           _buildBannerUI(_recommondController!.bannerItems.value),
@@ -125,11 +126,11 @@ class _RecommendPageState extends State<RecommendPage>
                                 Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
-                          onTap: (){
-                            Get.toNamed("/web_page",arguments: {
-                              Constant.ARTICLE_TITLE:banners[index].title,
-                              Constant.ARTICLE_URL:banners[index].url,
-                              Constant.ARTICLE_AUTHOR:""
+                          onTap: () {
+                            Get.toNamed("/web_page", arguments: {
+                              Constant.ARTICLE_TITLE: banners[index].title,
+                              Constant.ARTICLE_URL: banners[index].url,
+                              Constant.ARTICLE_AUTHOR: ""
                             });
                           },
                         ));
@@ -199,11 +200,11 @@ class _RecommendPageState extends State<RecommendPage>
                   bottom: BorderSide(
                       color: Colors.grey.withOpacity(0.4), width: 0.2.h))),
           child: InkWell(
-            onTap: (){
-              Get.toNamed("/web_page",arguments: {
-                Constant.ARTICLE_TITLE:articleItem.title,
-                Constant.ARTICLE_URL:articleItem.link,
-                Constant.ARTICLE_AUTHOR:articleItem.author
+            onTap: () {
+              Get.toNamed("/web_page", arguments: {
+                Constant.ARTICLE_TITLE: articleItem.title,
+                Constant.ARTICLE_URL: articleItem.link,
+                Constant.ARTICLE_AUTHOR: articleItem.author
               });
             },
             child: Row(
@@ -211,7 +212,7 @@ class _RecommendPageState extends State<RecommendPage>
                 IconButton(
                     onPressed: () {
                       CollectionController collectionController =
-                      Get.find<CollectionController>();
+                          Get.find<CollectionController>();
                       if (articleItem.collect ?? false) {
                         collectionController
                             .unCollectionArticle(articleItem.id.toString(), () {
@@ -272,14 +273,16 @@ class _RecommendPageState extends State<RecommendPage>
                         ),
                         Expanded(
                             child: Container(
-                              alignment: Alignment.centerRight,
-                              margin: EdgeInsets.only(right: 10.w),
-                              child: Text(
-                                articleItem.niceDate??articleItem.niceShareDate??"",
-                                style:
+                          alignment: Alignment.centerRight,
+                          margin: EdgeInsets.only(right: 10.w),
+                          child: Text(
+                            articleItem.niceDate ??
+                                articleItem.niceShareDate ??
+                                "",
+                            style:
                                 TextStyle(color: Colors.grey, fontSize: 12.sp),
-                              ),
-                            ))
+                          ),
+                        ))
                       ],
                     ),
                     Expanded(
@@ -293,7 +296,7 @@ class _RecommendPageState extends State<RecommendPage>
                                 color: Colors.black,
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w900,
-                            height: 1.3),
+                                height: 1.3),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -341,11 +344,11 @@ class _RecommendPageState extends State<RecommendPage>
                   bottom: BorderSide(
                       color: Colors.grey.withOpacity(0.4), width: 0.2.h))),
           child: InkWell(
-            onTap: (){
-              Get.toNamed("/web_page",arguments: {
-                Constant.ARTICLE_TITLE:articleItem.title,
-                Constant.ARTICLE_URL:articleItem.link,
-                Constant.ARTICLE_AUTHOR:articleItem.author
+            onTap: () {
+              Get.toNamed("/web_page", arguments: {
+                Constant.ARTICLE_TITLE: articleItem.title,
+                Constant.ARTICLE_URL: articleItem.link,
+                Constant.ARTICLE_AUTHOR: articleItem.author
               });
             },
             child: Row(
@@ -393,19 +396,23 @@ class _RecommendPageState extends State<RecommendPage>
                       children: [
                         Visibility(
                             visible: true,
-                            child: Container(
-                              margin: EdgeInsets.only(right: 10.w),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border.all(color: Colors.red, width: 1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              padding: EdgeInsets.only(
-                                  left: 2, right: 2, top: 1, bottom: 1),
-                              child: Text(
-                                "置顶",
-                                style: TextStyle(
-                                    color: Colors.red, fontSize: 14.sp),
+                            child: Opacity(//设置透明度为0，使控件不可见
+                              opacity: 1,
+                              child: Container(
+                                margin: EdgeInsets.only(right: 10.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border:
+                                      Border.all(color: Colors.red, width: 1),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                padding: EdgeInsets.only(
+                                    left: 2, right: 2, top: 1, bottom: 1),
+                                child: Text(
+                                  "置顶",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 14.sp),
+                                ),
                               ),
                             )),
                         Text(
@@ -417,7 +424,9 @@ class _RecommendPageState extends State<RecommendPage>
                           alignment: Alignment.centerRight,
                           margin: EdgeInsets.only(right: 10.w),
                           child: Text(
-                            articleItem.niceDate??articleItem.niceShareDate??"",
+                            articleItem.niceDate ??
+                                articleItem.niceShareDate ??
+                                "",
                             style:
                                 TextStyle(color: Colors.grey, fontSize: 12.sp),
                           ),
@@ -435,9 +444,7 @@ class _RecommendPageState extends State<RecommendPage>
                                 color: Colors.black,
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w900,
-                                 height: 1.3
-
-                            ),
+                                height: 1.3),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -464,5 +471,4 @@ class _RecommendPageState extends State<RecommendPage>
       }, childCount: controller!.topArticleItems.length),
     );
   }
-
 }
