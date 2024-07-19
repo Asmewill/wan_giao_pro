@@ -24,6 +24,7 @@ class _SystemPageState extends State<SystemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading:null,
           title: Text("体系"),
         ),
         body: GetX<SystemController>(initState: (state) {

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
-
 import 'package:wan_giao_pro/controller/project_controller.dart';
-import 'package:get/get.dart';
 import 'package:wan_giao_pro/page/project_content_page.dart';
-import 'package:wan_giao_pro/page/wechat_content_page.dart';
-import 'package:wan_giao_pro/theme/app_style.dart';
 
 class ProjectPage extends StatefulWidget {
   @override
@@ -33,6 +30,7 @@ class _ProjectPageState extends State<ProjectPage>
       appBar: AppBar(
           brightness: Brightness.light,// 状态栏的文字颜色为黑色
           centerTitle: true,
+          leading: null,
           title: Obx(() {
             return TabBar(
                 isScrollable: true,

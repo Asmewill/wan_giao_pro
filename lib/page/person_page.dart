@@ -30,10 +30,41 @@ class _PersonPageState extends State<PersonPage> {
               Line(),
               _menuIconWidget(),
               Line(),
-              // Expanded(
-              //   child: Container(),
-              //   flex: 1,
-              // )
+              Container(
+                height: 80.h,
+                width: double.infinity,
+                child: Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          height: double.infinity,
+                          child: IconTextWidget(
+                            Icons.person,
+                            "妹子",
+                            13,
+                            Colors.black,
+                            verticalSpacing: 6.h,
+                            iconColor: Colors.black,
+                            onTap: () {
+                              Get.toNamed("/gril_page");
+                            },
+                          ),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Container()),
+                    Expanded(
+                        flex: 1,
+                        child: Container()),
+                    Expanded(
+                        flex: 1,
+                        child: Container()),
+                  ],
+                ),
+              ),
+              Line(),
             ],
           ),
         ));
@@ -210,7 +241,11 @@ class _PersonPageState extends State<PersonPage> {
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
                   onTap: () {
-                    Get.toNamed("/collection_page");
+                    if(appState.isLogin.value){
+                      Get.toNamed("/collection_page");
+                    }else{
+                      Get.toNamed("/login_page");
+                    }
                   },
                 ),
               )),
@@ -246,7 +281,12 @@ class _PersonPageState extends State<PersonPage> {
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
                   onTap: () {
-                    Get.toNamed("/point_page");
+                    if(appState.isLogin.value){
+                      Get.toNamed("/point_page");
+                    }else{
+                      Get.toNamed("/login_page");
+                    }
+
                   },
                 ),
               )),
@@ -262,7 +302,11 @@ class _PersonPageState extends State<PersonPage> {
                   verticalSpacing: 6.h,
                   iconColor: Colors.black,
                   onTap: () {
-                    Get.toNamed("/rank_page");
+                    if(appState.isLogin.value){
+                      Get.toNamed("/rank_page");
+                    }else{
+                      Get.toNamed("/login_page");
+                    }
                   },
                 ),
               ))

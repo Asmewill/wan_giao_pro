@@ -27,13 +27,13 @@ class BaseGetXControllerWithRefresh extends BaseGetXController{
 
   void dispose(){
     super.dispose();
-    _refreshController!.dispose();
+    refreshController!.dispose();
   }
   @override
   void onClose() {
     // TODO: implement onClose
     super.onClose();
-    _refreshController!.dispose();
+    refreshController!.dispose();
   }
 
 }

@@ -10,6 +10,7 @@ import 'package:wan_giao_pro/event/message_event.dart';
 import 'package:wan_giao_pro/http/http_manager.dart';
 import 'package:wan_giao_pro/http/request_api.dart';
 import 'package:wan_giao_pro/page/person_page.dart';
+import 'package:wan_giao_pro/uitl/app_update.dart';
 
 class SettingPage extends StatelessWidget {
   @override
@@ -73,7 +74,7 @@ class SettingPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        showToast("aaa");
+                         AppUpdate.checkUpdate(context);
                       },
                     ),
                   ),

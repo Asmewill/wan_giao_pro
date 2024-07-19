@@ -6,6 +6,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/bindings/collection_binds.dart';
 import 'package:wan_giao_pro/bindings/login_bindings.dart';
+import 'package:wan_giao_pro/page/gril_detail_page.dart';
+import 'package:wan_giao_pro/page/gril_page.dart';
 import 'package:wan_giao_pro/page/index_page.dart';
 import 'package:wan_giao_pro/page/login_page.dart';
 import 'package:wan_giao_pro/page/person_collect_page.dart';
@@ -18,6 +20,7 @@ import 'package:wan_giao_pro/page/splash_page.dart';
 import 'package:wan_giao_pro/page/system_content_page.dart';
 import 'package:wan_giao_pro/page/web_page.dart';
 
+import 'bindings/gril_bindings.dart';
 import 'bindings/register_bindings.dart';
 import 'defalut/global.dart';
 
@@ -79,6 +82,18 @@ class MyApp extends StatelessWidget {
                   name: "/rank_page",
                   page: () => RankPage(),
                  // transition: Transition.fadeIn
+              ),
+              GetPage(
+                name: "/gril_page",
+                page: () => GrilPage(),
+                bindings: [GrilBindings()]
+                // transition: Transition.fadeIn
+              ),
+              GetPage(
+                  name: "/gril_detail_page",
+                  page: () => GrilDetailPage(),
+                  bindings: [GrilBindings()]
+                // transition: Transition.fadeIn
               ),
             ],
             localizationsDelegates: [

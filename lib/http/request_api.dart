@@ -15,4 +15,7 @@ class RequestApi{
   static const String REGISTER="user/register";
   static const String SYSTEM_TREE= "tree/json";
 
+  static const String QUERY_NEWS_TYPE_API = "https://www.mxnzp.com/api/news/types";
+  static const String QUERY_GIRLS_API = "https://www.mxnzp.com/api/image/girl/list";
+
 }

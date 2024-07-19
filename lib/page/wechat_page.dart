@@ -34,6 +34,7 @@ class _WeChatPageState extends State<WeChatPage> with TickerProviderStateMixin,A
       appBar: AppBar(
           brightness: Brightness.light,// 状态栏的文字颜色为黑色
           centerTitle: true,
+          leading: null,
           title: Obx(() {
             return TabBar(
                 isScrollable: true,
