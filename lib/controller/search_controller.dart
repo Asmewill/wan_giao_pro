@@ -94,5 +94,10 @@ class SearchController extends BaseGetXControllerWithRefresh{
     });
   }
 
+  void cleanAllHistory(){
+    SpUtil.putStringList(Constant.KEY_SEARCH_HISTORY, []);
+    searchHistory.value=[];
+  }
+
 
 }

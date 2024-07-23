@@ -12,6 +12,7 @@ import 'package:wan_giao_pro/compents/search_view.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/collection_controller.dart';
 import 'package:wan_giao_pro/controller/search_controller.dart';
+import 'package:wan_giao_pro/dialog/remind_dialog.dart';
 
 class SearchPage extends GetView<SearchController> {
   @override
@@ -62,7 +63,12 @@ class SearchPage extends GetView<SearchController> {
                       alignment: Alignment.center,
                       child: TextButton(
                           onPressed: () {
-                            Get.back();
+                            controller.textEditingController!.text = "";
+                            if (controller.isSearching.value) {
+                              controller.isSearching.value = false;
+                            } else {
+                              Get.back();
+                            }
                           },
                           child: Text(
                             "取消",
@@ -83,7 +89,7 @@ class SearchPage extends GetView<SearchController> {
                         height: 0.h,
                       ),
                       _buildHotSearchUiList(),
-                      _buildHistoryUiList()
+                      _buildHistoryUiList(context)
                     ],
                   ),
                 ),
@@ -118,7 +124,13 @@ class SearchPage extends GetView<SearchController> {
                     backgroundColor: Colors
                         .primaries[Random().nextInt(Colors.primaries.length)],
                     onPressed: () {
-                      showToast(element.name ?? "");
+                      controller.setQueryKey(element.name ?? "");
+                      controller.setSearching(true);
+                      controller.textEditingController!.text =
+                          element.name ?? "";
+                      controller.textEditingController!.selection =
+                          TextSelection.collapsed(
+                              offset: (element.name ?? "").length);
                     });
               }).toList(),
             )
@@ -128,15 +140,41 @@ class SearchPage extends GetView<SearchController> {
     );
   }
 
-  _buildHistoryUiList() {
+  _buildHistoryUiList(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 20.w, right: 10.w, top: 5.h, bottom: 5.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "历史记录",
-            style: TextStyle(fontSize: 14.sp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "历史记录",
+                style: TextStyle(fontSize: 14.sp),
+              ),
+              InkWell(
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 30.h,
+                  margin: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Text(
+                    "删除",
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return RemindDialog("提示", "确定删除所有历史记录吗?", () {
+                          controller!.cleanAllHistory();
+                          Navigator.of(context).pop();
+                        });
+                      });
+                },
+              )
+            ],
           ),
           SizedBox(
             height: 5.h,
@@ -149,7 +187,11 @@ class SearchPage extends GetView<SearchController> {
                   backgroundColor: Colors
                       .primaries[Random().nextInt(Colors.primaries.length)],
                   onPressed: () {
-                    showToast(element);
+                    controller.setQueryKey(element ?? "");
+                    controller.setSearching(true);
+                    controller.textEditingController!.text = element ?? "";
+                    controller.textEditingController!.selection =
+                        TextSelection.collapsed(offset: (element ?? "").length);
                   });
             }).toList(),
           )
@@ -179,11 +221,8 @@ class SearchPage extends GetView<SearchController> {
   }
 }
 
-
-
 class SearchResultPage extends StatefulWidget {
   SearchController searchController;
-
 
   SearchResultPage(this.searchController);
 
@@ -195,30 +234,40 @@ class _SearchResultPageState extends State<SearchResultPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      body: GetX(
-        init: widget.searchController,
-        initState: (state) {
-          widget.searchController.setRefreshController(new RefreshController());
-          widget.searchController!.initData(true);
-        },
-        builder: (_) {
-          return SmartRefresher(
-              controller: widget.searchController!.refreshController!,
-              header: MaterialClassicHeader(),
-              footer: ClassicFooter(),
-              enablePullUp: true,
-              enablePullDown: false,
-              onRefresh: () async {},
-              onLoading: () async {
-                widget.searchController!.loadArticleBySearchKey(false);
-              },
-              child: _bodyStateWidget(widget.searchController!));
-        },
-      ),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          body: GetX(
+            init: widget.searchController,
+            initState: (state) {
+              widget.searchController
+                  .setRefreshController(new RefreshController());
+              widget.searchController!.initData(true);
+            },
+            builder: (_) {
+              return SmartRefresher(
+                  controller: widget.searchController!.refreshController!,
+                  header: MaterialClassicHeader(),
+                  footer: ClassicFooter(),
+                  enablePullUp: true,
+                  enablePullDown: false,
+                  onRefresh: () async {},
+                  onLoading: () async {
+                    widget.searchController!.loadArticleBySearchKey(false);
+                  },
+                  child: _bodyStateWidget(widget.searchController!));
+            },
+          ),
+        ),
+        onWillPop: () async {
+          // 返回键被按下时执行的操作
+          //showToast('返回键被按下');
+          widget.searchController.isSearching.value = false;
+          widget.searchController.textEditingController!.text = "";
+          // 返回 false 表示忽略返回键事件
+          // 返回 true 表示允许默认的返回键行为
+          return false;
+        });
   }
-
 
   _bodyStateWidget(SearchController controller) {
     if (controller.loadState.value == LoadState.LOADING) {
@@ -240,7 +289,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
         controller.loadState.value == LoadState.NO_MORE) {
       return ListView.separated(
           itemBuilder: (context, index) {
-            ArticleItem articleItem=widget.searchController!.articleItems[index];
+            ArticleItem articleItem =
+                widget.searchController!.articleItems[index];
             return Container(
               height: 100.h,
               decoration: BoxDecoration(
@@ -260,10 +310,10 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     IconButton(
                         onPressed: () {
                           CollectionController collectionController =
-                          Get.find<CollectionController>();
+                              Get.find<CollectionController>();
                           if (articleItem.collect ?? false) {
-                            collectionController
-                                .unCollectionArticle(articleItem.id.toString(), () {
+                            collectionController.unCollectionArticle(
+                                articleItem.id.toString(), () {
                               articleItem.setCollect = false;
                               setState(() {});
                             }, (value) {
@@ -282,87 +332,90 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         },
                         icon: articleItem.collect ?? false
                             ? Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                        )
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
                             : Icon(
-                          Icons.favorite_border,
-                        )),
+                                Icons.favorite_border,
+                              )),
                     Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                    visible: false,
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 10.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(color: Colors.red, width: 1),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          left: 2, right: 2, top: 1, bottom: 1),
-                                      child: Text(
-                                        "置顶",
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 14.sp),
-                                      ),
-                                    )),
-                                Text(
-                                  getAuthor(articleItem) ?? "",
-                                  style: TextStyle(color: Colors.grey, fontSize: 12.sp),
-                                ),
-                                Expanded(
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      margin: EdgeInsets.only(right: 10.w),
-                                      child: Text(
-                                        articleItem.niceDate ??
-                                            articleItem.niceShareDate ??
-                                            "",
-                                        style:
-                                        TextStyle(color: Colors.grey, fontSize: 12.sp),
-                                      ),
-                                    ))
-                              ],
-                            ),
-                            Expanded(
-                                flex: 30,
+                            Visibility(
+                                visible: false,
                                 child: Container(
-                                  padding: EdgeInsets.only(top: 5, right: 5),
-                                  alignment: Alignment.centerLeft,
+                                  margin: EdgeInsets.only(right: 10.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border:
+                                        Border.all(color: Colors.red, width: 1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  padding: EdgeInsets.only(
+                                      left: 2, right: 2, top: 1, bottom: 1),
                                   child: Text(
-                                    articleItem.title ?? "",
+                                    "置顶",
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.w900,
-                                        height: 1.3),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                        color: Colors.red, fontSize: 14.sp),
                                   ),
                                 )),
+                            Text(
+                              getAuthor(articleItem) ?? "",
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: 12.sp),
+                            ),
                             Expanded(
-                              flex: 15,
-                              child: Container(
-                                padding: EdgeInsets.only(top: 5, right: 5),
-                                child: Text(
-                                  "${articleItem.superChapterName}/${articleItem.chapterName}",
-                                  style: TextStyle(color: Colors.grey, fontSize: 12.sp),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
+                                child: Container(
+                              alignment: Alignment.centerRight,
+                              margin: EdgeInsets.only(right: 10.w),
+                              child: Text(
+                                articleItem.niceDate ??
+                                    articleItem.niceShareDate ??
+                                    "",
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12.sp),
                               ),
-                            )
+                            ))
                           ],
-                        ))
+                        ),
+                        Expanded(
+                            flex: 30,
+                            child: Container(
+                              padding: EdgeInsets.only(top: 5, right: 5),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                articleItem.title ?? "",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.3),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            )),
+                        Expanded(
+                          flex: 15,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 5, right: 5),
+                            child: Text(
+                              "${articleItem.superChapterName}/${articleItem.chapterName}",
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: 12.sp),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        )
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -378,6 +431,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
           itemCount: widget.searchController!.articleItems.length);
     }
   }
+
   String? getAuthor(ArticleItem articleItem) {
     String? author = "";
     if (articleItem.author != null && articleItem.author!.length > 0) {
@@ -387,6 +441,4 @@ class _SearchResultPageState extends State<SearchResultPage> {
     }
     return author;
   }
-
 }
-
