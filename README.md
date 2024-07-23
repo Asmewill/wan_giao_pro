@@ -50,14 +50,6 @@ don't support null safety:
 - package:flutter_page_indicator
 - package:transformer_page_view
 
-### Support Version
-Flutter SDK Version: Flutter (Channel stable, 2.2.3, on Microsoft Windows [Version 10.0.19045.4291], locale zh-CN)
-AndroidStudio Version: Android Studio Giraffe | 2022.3.1 Patch 1
-Gradle Version:gradle-6.1.1-all.zip  
-ClassPath :com.android.tools.build:gradle:4.0.2
-备注：如果Gradle版本本地没有的话，run项目会一直卡住，无法安装，时间非常久...
-
-
 
 ### debug整个项目才可以断点，不支持中途设置断点调试
 
@@ -73,3 +65,10 @@ ClassPath :com.android.tools.build:gradle:4.0.2
 
 - 创建一个stateless widget 或 stateful widget
 - 或输入stful 创建一个 Stateful widget
+
+### Support Version
+Flutter SDK Version: Flutter (Channel stable, 2.2.3, on Microsoft Windows [Version 10.0.19045.4291], locale zh-CN)
+AndroidStudio Version: Android Studio Giraffe | 2022.3.1 Patch 1
+Gradle Version:gradle-6.1.1-all.zip  
+ClassPath :com.android.tools.build:gradle:4.0.2
+备注：如果Gradle版本本地没有的话，run项目会一直卡住，无法安装，时间非常久...

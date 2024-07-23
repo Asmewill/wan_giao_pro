@@ -6,6 +6,7 @@ import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/gril_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wan_giao_pro/page/gril_detail_page.dart';
+import 'package:wan_giao_pro/uitl/permission_util.dart';
 
 class GrilPage extends GetView<GrilController> {
   @override
@@ -115,4 +116,6 @@ class GrilPage extends GetView<GrilController> {
       }
     }
   }
+
+
 }

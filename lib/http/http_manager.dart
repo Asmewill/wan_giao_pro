@@ -154,28 +154,6 @@ class HttpManager {
     }
   }
 
-//  Future<dynamic>  request(String url, {Map<String, dynamic>? params, Map<String, dynamic>? queryParams,Options? options, String method = Method.GET, String newUrl = ""}) async {
-//    Response response;
-//    Options tempOptions=options??Options();
-//    tempOptions.extra={"newUrl:":newUrl};
-//    tempOptions.method=method;
-//    try{
-//      response = await _dio!.request(url,data: params, queryParameters: queryParams,options: options);
-//      if(response.statusCode==200){
-//        if(response.data['errorCode']!=null&&response.data['errorCode']==0||
-//            response.data['errorCode']!=null&&response.data['errorCode']==1){
-//          return response.data;
-//        }else{
-//          throw ResultException(response.data['code'], response.data['msg']);
-//        }
-//      }else{
-//        throw ResultException(9007,"服务器失联了，呜呜呜呜");
-//      }
-//    } on DioError catch(e){
-//      HttpDioError.handleError(e);
-//    }
-// }
-
 }
 
 class Method {
