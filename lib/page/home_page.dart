@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/search_view.dart';
@@ -82,11 +83,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                // enable: true,
                 queryHint: "搜索",
                 onTap: (){
-                  showToast("jump");
+                  Get.toNamed("/search_page");
                 },
               ) ,
             )
-
           ],
         ),
       ),

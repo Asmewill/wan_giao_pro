@@ -8,4 +8,6 @@ class Constant{
   static const String ARTICLE_AUTHOR="article_author";
   static const String TAB_BEAN="tab_bean";
   static const String TAB_INDEX="tab_index";
+
+  static const String KEY_SEARCH_HISTORY="search_history";
 }

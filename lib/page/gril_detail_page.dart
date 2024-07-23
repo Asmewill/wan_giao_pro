@@ -16,6 +16,8 @@ class GrilDetailPage extends GetView<GrilDetailController> {
 
   var imageUrl;
 
+  GrilDetailPage({this.imageUrl});
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -27,7 +29,7 @@ class GrilDetailPage extends GetView<GrilDetailController> {
               },
               child: PhotoView(
                 imageProvider: CachedNetworkImageProvider(
-                    "http://power-api.cretinzp.com:8000/girls/1/poplkrnggekxnqls.jpg"),
+                  this.imageUrl),
               ),
             ),
           ),
@@ -48,9 +50,9 @@ class GrilDetailPage extends GetView<GrilDetailController> {
     );
   }
 
-  saveImage() async{
+  saveImage( ) async{
     var data =await HttpManager.instance.get(
-        "http://power-api.cretinzp.com:8000/girls/1/poplkrnggekxnqls.jpg",
+        this.imageUrl,
         option: Options(responseType: ResponseType.bytes));
     final result= await ImageGallerySaver.saveImage(
       Uint8List.fromList(data),

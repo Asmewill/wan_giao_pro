@@ -6,6 +6,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/bindings/collection_binds.dart';
 import 'package:wan_giao_pro/bindings/login_bindings.dart';
+import 'package:wan_giao_pro/bindings/search_bindings.dart';
 import 'package:wan_giao_pro/page/gril_detail_page.dart';
 import 'package:wan_giao_pro/page/gril_page.dart';
 import 'package:wan_giao_pro/page/index_page.dart';
@@ -14,6 +15,7 @@ import 'package:wan_giao_pro/page/person_collect_page.dart';
 import 'package:wan_giao_pro/page/point_page.dart';
 import 'package:wan_giao_pro/page/rank_page.dart';
 import 'package:wan_giao_pro/page/register_page.dart';
+import 'package:wan_giao_pro/page/search_page.dart';
 import 'package:wan_giao_pro/page/setting_page.dart';
 import 'package:wan_giao_pro/page/share_page.dart';
 import 'package:wan_giao_pro/page/splash_page.dart';
@@ -93,6 +95,12 @@ class MyApp extends StatelessWidget {
                   name: "/gril_detail_page",
                   page: () => GrilDetailPage(),
                   bindings: [GrilBindings()]
+                // transition: Transition.fadeIn
+              ),
+              GetPage(
+                  name: "/search_page",
+                  page: () => SearchPage(),
+                  bindings: [SearchBindings()]
                 // transition: Transition.fadeIn
               ),
             ],

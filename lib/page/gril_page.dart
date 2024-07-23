@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_giao_pro/compents/state_page.dart';
 import 'package:wan_giao_pro/controller/gril_controller.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wan_giao_pro/page/gril_detail_page.dart';
 
@@ -87,7 +86,7 @@ class GrilPage extends GetView<GrilController> {
                   clipBehavior: Clip.antiAlias,
                 ),
                 onTap: () {
-                  Get.toNamed("/gril_detail_page");
+                  Get.to(()=>GrilDetailPage( imageUrl:controller.grilList[index].imageUrl??""));
                 },
               );
             });
@@ -108,11 +107,8 @@ class GrilPage extends GetView<GrilController> {
                   elevation: 5,
                 ),
                 onTap: () {
-                  Get.to(()=>{
-                     GrilDetailPage()
-                  });
+                  Get.to(()=> GrilDetailPage( imageUrl: controller.grilList[index].imageUrl??""));
                 //  Get.toNamed("/gril_detail_page",arguments: {"imgUrl":controller.grilList[index].imageUrl??""});
-
                 },
               );
             });
